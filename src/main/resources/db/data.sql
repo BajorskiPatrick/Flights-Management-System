@@ -147,9 +147,9 @@ INSERT INTO reservations (flightId, passengerId, seatNumber) VALUES
 
 (10, 6, '6B'),
 
-(2, 7, '1C',),
-(4, 7, '2D',),
-(6, 7, '3E',),
+(2, 7, '1C'),
+(4, 7, '2D'),
+(6, 7, '3E'),
 
 (5, 8, '4A'),
 (10, 8, '5B'),
