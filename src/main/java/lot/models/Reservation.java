@@ -29,7 +29,7 @@ public class Reservation {
      * @param seatNumber number of the seat assigned to this reservation
      */
     public Reservation(int flightId, int passengerId, String seatNumber) {
-        this.id = id;
+        this.id = -1;
         this.flightId = flightId;
         this.passengerId = passengerId;
         this.seatNumber = seatNumber;

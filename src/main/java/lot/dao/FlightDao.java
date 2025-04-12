@@ -1,6 +1,7 @@
 package lot.dao;
 
 import lot.config.DatabaseInitializer;
+import lot.exceptions.dao.DatabaseActionException;
 import lot.models.Flight;
 import lot.utils.ResultSetMapper;
 
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FlightDao implements GenericDao<Flight> {
-    public Boolean hasTakenPlace(int flightId) {
+    public Boolean hasTakenPlace(int flightId) throws DatabaseActionException {
         String query =
                 """
                 SELECT 1
@@ -25,14 +26,13 @@ public class FlightDao implements GenericDao<Flight> {
             return !rs.next();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseActionException("Database error while checking if flight has already taken place", e);
         }
-        return null;
     }
 
 
     @Override
-    public Flight findById(int id) {
+    public Flight findById(int id) throws DatabaseActionException {
         String query =
                 """
                 SELECT *
@@ -49,15 +49,13 @@ public class FlightDao implements GenericDao<Flight> {
             return ResultSetMapper.mapFlight(rs);
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseActionException("Database error while fetching flight details", e);
         }
-
-        return null;
     }
 
 
     @Override
-    public List<Flight> findAll() {
+    public List<Flight> findAll() throws DatabaseActionException {
         List<Flight> flights = new ArrayList<>();
 
         String query =
@@ -77,15 +75,13 @@ public class FlightDao implements GenericDao<Flight> {
             return flights;
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseActionException("Database error while fetching all flights details", e);
         }
-
-        return null;
     }
 
 
     @Override
-    public void save(Flight flight) {
+    public void save(Flight flight) throws DatabaseActionException {
         String query =
                 """
                 INSERT INTO flights (departure, destination, departureDate, duration, seatRowsAmount, twoWay) VALUES
@@ -105,12 +101,12 @@ public class FlightDao implements GenericDao<Flight> {
             ps.executeUpdate();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseActionException("Database error while saving new flight", e);
         }
     }
 
     @Override
-    public void update(Flight flight) {
+    public void update(Flight flight) throws DatabaseActionException {
         String query =
                 """
                 UPDATE flights
@@ -132,12 +128,12 @@ public class FlightDao implements GenericDao<Flight> {
             ps.executeUpdate();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseActionException("Database error while updating flight details", e);
         }
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(int id) throws DatabaseActionException {
         String query =
                 """
                 DELETE FROM flights
@@ -151,13 +147,13 @@ public class FlightDao implements GenericDao<Flight> {
             ps.executeUpdate();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseActionException("Database error while deleting flight", e);
         }
     }
 
 
     @Override
-    public Boolean existsById(int id) {
+    public Boolean existsById(int id) throws DatabaseActionException {
         String query =
                 """
                 SELECT 1
@@ -173,9 +169,7 @@ public class FlightDao implements GenericDao<Flight> {
             return rs.next();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseActionException("Database error while checking if flight exists", e);
         }
-
-        return null;
     }
 }

@@ -1,7 +1,7 @@
 package lot.dao;
 
 import lot.config.DatabaseInitializer;
-import lot.models.Flight;
+import lot.exceptions.dao.DatabaseActionException;
 import lot.models.Reservation;
 import lot.utils.ResultSetMapper;
 
@@ -10,11 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReservationDao implements GenericDao<Reservation> {
-
-
-
     @Override
-    public Reservation findById(int id) {
+    public Reservation findById(int id) throws DatabaseActionException {
         String query =
                 """
                 SELECT *
@@ -31,15 +28,12 @@ public class ReservationDao implements GenericDao<Reservation> {
             return ResultSetMapper.mapReservation(rs);
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseActionException("Database error while fetching reservation details", e);
         }
-
-        return null;
     }
 
-
     @Override
-    public List<Reservation> findAll() {
+    public List<Reservation> findAll() throws DatabaseActionException {
         List<Reservation> reservations = new ArrayList<>();
 
         String query =
@@ -59,15 +53,12 @@ public class ReservationDao implements GenericDao<Reservation> {
             return reservations;
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseActionException("Database error while fetching all reservations details", e);
         }
-
-        return null;
     }
 
-
     @Override
-    public void save(Reservation reservation) {
+    public void save(Reservation reservation) throws DatabaseActionException {
         String query =
                 """
                 INSERT INTO reservations (flightId, passengerId, seatNumber) VALUES 
@@ -84,12 +75,12 @@ public class ReservationDao implements GenericDao<Reservation> {
             ps.executeUpdate();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseActionException("Database error while saving new reservation", e);
         }
     }
 
     @Override
-    public void update(Reservation reservation) {
+    public void update(Reservation reservation) throws DatabaseActionException {
         String query =
                 """
                 UPDATE reservations
@@ -108,12 +99,12 @@ public class ReservationDao implements GenericDao<Reservation> {
             ps.executeUpdate();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseActionException("Database error while updating reservation details", e);
         }
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(int id) throws DatabaseActionException {
         String query =
                 """
                 DELETE FROM reservations
@@ -127,12 +118,12 @@ public class ReservationDao implements GenericDao<Reservation> {
             ps.executeUpdate();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseActionException("Database error while deleting reservation details", e);
         }
     }
 
     @Override
-    public Boolean existsById(int id) {
+    public Boolean existsById(int id) throws DatabaseActionException {
         String query =
                 """
                 SELECT 1
@@ -148,9 +139,7 @@ public class ReservationDao implements GenericDao<Reservation> {
             return rs.next();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            throw new DatabaseActionException("Database error while checking if the reservation exists", e);
         }
-
-        return null;
     }
 }
