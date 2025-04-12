@@ -1,14 +1,14 @@
-INSERT INTO flights (source, destination, duration, twoWay) VALUES
-    ('Warszawa', 'Berlin', 90, FALSE),
-    ('Kraków', 'Paryż', 120, TRUE),
-    ('Gdańsk', 'Londyn', 150, FALSE),
-    ('Wrocław', 'Rzym', 180, TRUE),
-    ('Poznań', 'Barcelona', 160, FALSE),
-    ('Katowice', 'Ateny', 210, TRUE),
-    ('Łódź', 'Wiedeń', 100, FALSE),
-    ('Szczecin', 'Oslo', 190, TRUE),
-    ('Rzeszów', 'Dublin', 170, FALSE),
-    ('Bydgoszcz', 'Sztokholm', 140, TRUE);
+INSERT INTO flights (departure, destination, departureDate, duration, twoWay) VALUES
+    ('Warszawa', 'Berlin','2025-06-15 08:00', 90, FALSE),
+    ('Kraków', 'Paryż', '2025-05-10 10:30', 120, TRUE),
+    ('Gdańsk', 'Londyn', '2025-04-08 15:40', 150, FALSE),
+    ('Wrocław', 'Rzym', '2025-03-27 21:10', 180, TRUE),
+    ('Poznań', 'Barcelona', '2025-05-26 12:30', 160, FALSE),
+    ('Katowice', 'Ateny', '2025-06-08 06:15', 210, TRUE),
+    ('Łódź', 'Wiedeń', '2025-07-23 03:30', 100, FALSE),
+    ('Szczecin', 'Oslo', '2025-08-03 17:00', 190, TRUE),
+    ('Rzeszów', 'Dublin', '2025-07-18 19:20', 170, FALSE),
+    ('Bydgoszcz', 'Sztokholm', '2025-06-30 20:00', 140, TRUE);
 
 -- Wstawianie 40 pasażerów
 INSERT INTO passengers (name, surname, email, phoneNumber) VALUES
@@ -127,125 +127,125 @@ INSERT INTO seats (flightId, seatNumber, available) VALUES
 (10, '6A', TRUE), (10, '6B', TRUE), (10, '6C', TRUE), (10, '6D', TRUE), (10, '6E', TRUE);
 
 
-INSERT INTO reservations (flightId, passengerId, seatNumber, tookPlace) VALUES
+INSERT INTO reservations (flightId, passengerId, seatNumber) VALUES
 
-(1, 1, '1A', TRUE),
-(3, 1, '2B', FALSE),
-(5, 1, '3C', TRUE),
+(1, 1, '1A'),
+(3, 1, '2B'),
+(5, 1, '3C'),
 
-(2, 2, '4D', TRUE),
-(7, 2, '5E', FALSE),
+(2, 2, '4D'),
+(7, 2, '5E'),
 
-(4, 3, '6A', TRUE),
+(4, 3, '6A'),
 
-(1, 4, '1B', TRUE),
-(6, 4, '2C', FALSE),
-(9, 4, '3D', TRUE),
+(1, 4, '1B'),
+(6, 4, '2C'),
+(9, 4, '3D'),
 
-(3, 5, '4E', TRUE),
-(8, 5, '5A', FALSE),
+(3, 5, '4E'),
+(8, 5, '5A'),
 
-(10, 6, '6B', TRUE),
+(10, 6, '6B'),
 
-(2, 7, '1C', TRUE),
-(4, 7, '2D', FALSE),
-(6, 7, '3E', TRUE),
+(2, 7, '1C',),
+(4, 7, '2D',),
+(6, 7, '3E',),
 
-(5, 8, '4A', TRUE),
-(10, 8, '5B', FALSE),
+(5, 8, '4A'),
+(10, 8, '5B'),
 
-(7, 9, '6C', TRUE),
+(7, 9, '6C'),
 
-(1, 10, '2A', TRUE),
-(3, 10, '3B', FALSE),
-(5, 10, '4C', TRUE),
+(1, 10, '2A'),
+(3, 10, '3B'),
+(5, 10, '4C'),
 
-(8, 11, '5D', TRUE),
-(10, 11, '6E', FALSE),
+(8, 11, '5D'),
+(10, 11, '6E'),
 
-(9, 12, '1D', TRUE),
+(9, 12, '1D'),
 
-(2, 13, '2E', TRUE),
-(4, 13, '3A', FALSE),
-(6, 13, '4B', TRUE),
+(2, 13, '2E'),
+(4, 13, '3A'),
+(6, 13, '4B'),
 
-(7, 14, '5C', TRUE),
-(9, 14, '6D', FALSE),
+(7, 14, '5C'),
+(9, 14, '6D'),
 
-(1, 15, '1E', TRUE),
+(1, 15, '1E'),
 
-(3, 16, '2A', TRUE),
-(5, 16, '3B', FALSE),
-(7, 16, '4C', TRUE),
+(3, 16, '2A'),
+(5, 16, '3B'),
+(7, 16, '4C'),
 
-(4, 17, '5D', TRUE),
-(8, 17, '6E', FALSE),
+(4, 17, '5D'),
+(8, 17, '6E'),
 
-(10, 18, '1A', TRUE),
+(10, 18, '1A'),
 
-(2, 19, '2B', TRUE),
-(6, 19, '3C', FALSE),
-(9, 19, '4D', TRUE),
+(2, 19, '2B'),
+(6, 19, '3C'),
+(9, 19, '4D'),
 
-(1, 20, '5E', TRUE),
-(5, 20, '6A', FALSE),
+(1, 20, '5E'),
+(5, 20, '6A'),
 
-(3, 21, '1B', TRUE),
+(3, 21, '1B'),
 
-(4, 22, '2C', TRUE),
-(7, 22, '3D', FALSE),
-(10, 22, '4E', TRUE),
+(4, 22, '2C'),
+(7, 22, '3D'),
+(10, 22, '4E'),
 
-(6, 23, '5A', TRUE),
-(8, 23, '6B', FALSE),
+(6, 23, '5A'),
+(8, 23, '6B'),
 
-(2, 24, '1C', TRUE),
+(2, 24, '1C'),
 
-(1, 25, '2D', TRUE),
-(3, 25, '3E', FALSE),
-(5, 25, '4A', TRUE),
+(1, 25, '2D'),
+(3, 25, '3E'),
+(5, 25, '4A'),
 
-(7, 26, '5B', TRUE),
-(9, 26, '6C', FALSE),
+(7, 26, '5B'),
+(9, 26, '6C'),
 
-(4, 27, '1D', TRUE),
+(4, 27, '1D'),
 
-(6, 28, '2E', TRUE),
-(8, 28, '3A', FALSE),
-(10, 28, '4B', TRUE),
+(6, 28, '2E'),
+(8, 28, '3A'),
+(10, 28, '4B'),
 
-(2, 29, '5C', TRUE),
-(5, 29, '6D', FALSE),
+(2, 29, '5C'),
+(5, 29, '6D'),
 
-(1, 30, '1E', TRUE),
+(1, 30, '1E'),
 
-(3, 31, '2A', TRUE),
-(7, 31, '3B', FALSE),
-(9, 31, '4C', TRUE),
+(3, 31, '2A'),
+(7, 31, '3B'),
+(9, 31, '4C'),
 
-(4, 32, '5D', TRUE),
-(8, 32, '6E', FALSE),
+(4, 32, '5D'),
+(8, 32, '6E'),
 
-(10, 33, '1A', TRUE),
+(10, 33, '1A'),
 
-(2, 34, '2B', TRUE),
-(6, 34, '3C', FALSE),
-(9, 34, '4D', TRUE),
+(2, 34, '2B'),
+(6, 34, '3C'),
+(9, 34, '4D'),
 
-(1, 35, '5E', TRUE),
-(5, 35, '6A', FALSE),
+(1, 35, '5E'),
+(5, 35, '6A'),
 
-(3, 36, '1B', TRUE),
+(3, 36, '1B'),
 
-(4, 37, '2C', TRUE),
-(7, 37, '3D', FALSE),
-(10, 37, '4E', TRUE),
+(4, 37, '2C'),
+(7, 37, '3D'),
+(10, 37, '4E'),
 
-(6, 38, '5A', TRUE),
-(8, 38, '6B', FALSE),
+(6, 38, '5A'),
+(8, 38, '6B'),
 
-(2, 39, '1C', TRUE),
+(2, 39, '1C'),
 
-(1, 40, '2D', TRUE),
-(3, 40, '3E', FALSE),
-(5, 40, '4A', TRUE);
+(1, 40, '2D'),
+(3, 40, '3E'),
+(5, 40, '4A');

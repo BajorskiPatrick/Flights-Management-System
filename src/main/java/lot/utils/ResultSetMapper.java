@@ -1,18 +1,22 @@
 package lot.utils;
 
+import lot.dao.ReservationDao;
 import lot.models.Flight;
 import lot.models.Passenger;
 import lot.models.Reservation;
 import lot.models.Seat;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class ResultSetMapper {
     public static Flight mapFlight(ResultSet rs) throws SQLException {
         return new Flight(
                 rs.getInt("id"),
-                rs.getString("source"),
+                rs.getString("departure"),
                 rs.getString("destination"),
+                rs.getObject("departureDate", LocalDateTime.class),
                 rs.getInt("duration"),
                 rs.getBoolean("twoWay")
         );
@@ -36,7 +40,7 @@ public class ResultSetMapper {
                 rs.getInt("flightId"),
                 rs.getInt("passengerId"),
                 rs.getString("seatNumber"),
-                rs.getBoolean("tookPlace")
+                ReservationDao.hasTakenPlace(rs.getInt("id"))
         );
     }
 

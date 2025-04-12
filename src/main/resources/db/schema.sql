@@ -9,8 +9,9 @@ create table if not exists passengers (
 
 create table if not exists flights (
     id integer GENERATED ALWAYS AS IDENTITY primary key,
-    source varchar(50) not null,
+    departure varchar(50) not null,
     destination varchar(50) not null,
+    departureDate timestamp not null,
     duration integer not null,
     twoWay boolean not null
 );
@@ -21,7 +22,6 @@ create table if not exists reservations (
     flightId integer not null,
     passengerId integer not null,
     seatNumber varchar(4) not null,
-    tookPlace boolean not null,
     constraint reservations_flight_fk foreign key (flightId) references flights(id),
     constraint reservations_passenger_fk foreign key (passengerId) references passengers(id)
 );
@@ -34,4 +34,3 @@ create table if not exists seats (
     primary key(flightId, seatNumber),
     constraint seats_flight_fk foreign key (flightId) references flights(id)
 );
-

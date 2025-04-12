@@ -1,6 +1,9 @@
 package lot;
 
 import lot.config.DatabaseInitializer;
+import lot.models.Flight;
+import lot.models.Reservation;
+import lot.utils.ResultSetMapper;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -23,12 +26,11 @@ public class App {
 
         try (Connection conn = DatabaseInitializer.getConnection()) {
             Statement stmt = conn.createStatement();
-            String query = "select * from flights";
+            String query = "select * from reservations r where r.passengerId = 1";
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
-                int id = rs.getInt("id");
-                int time = rs.getInt("duration");
-                System.out.println("ID: " + id + "\tTime: " + time);
+                Reservation res = ResultSetMapper.mapReservation(rs);
+                System.out.println(res);
             }
         }
         catch (SQLException e) {
