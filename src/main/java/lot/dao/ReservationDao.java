@@ -10,26 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReservationDao implements GenericDao<Reservation> {
-    public static Boolean hasTakenPlace(int flightId) {
-        String query =
-                """
-                SELECT 1
-                FROM flights f
-                WHERE f.id = ? AND f.departureDate > CURRENT_TIMESTAMP
-                """;
-        try (
-                Connection conn = DatabaseInitializer.getConnection();
-                PreparedStatement ps = conn.prepareStatement(query);
-        ) {
-            ps.setInt(1, flightId);
-            ResultSet rs = ps.executeQuery();
-            return !rs.next();
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+
 
 
     @Override
@@ -47,8 +28,7 @@ public class ReservationDao implements GenericDao<Reservation> {
         ) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            Reservation reservation = ResultSetMapper.mapReservation(rs);
-            return reservation;
+            return ResultSetMapper.mapReservation(rs);
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -149,5 +129,28 @@ public class ReservationDao implements GenericDao<Reservation> {
         catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Boolean existsById(int id) {
+        String query =
+                """
+                SELECT 1
+                FROM reservations r
+                WHERE r.id = ?
+                """;
+        try (
+                Connection conn = DatabaseInitializer.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query)
+        ) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

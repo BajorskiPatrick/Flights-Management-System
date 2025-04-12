@@ -1,7 +1,6 @@
 package lot.dao;
 
 import lot.config.DatabaseInitializer;
-import lot.models.Flight;
 import lot.models.Passenger;
 import lot.utils.ResultSetMapper;
 
@@ -25,8 +24,7 @@ public class PassengerDao implements GenericDao<Passenger> {
         ) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            Passenger passenger = ResultSetMapper.mapPassenger(rs);
-            return passenger;
+            return ResultSetMapper.mapPassenger(rs);
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -129,6 +127,29 @@ public class PassengerDao implements GenericDao<Passenger> {
         catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Boolean existsById(int id) {
+        String query =
+                """
+                SELECT 1
+                FROM passengers p
+                WHERE p.id = ?
+                """;
+        try (
+                Connection conn = DatabaseInitializer.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query)
+        ) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
 

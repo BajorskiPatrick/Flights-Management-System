@@ -8,5 +8,6 @@ public interface GenericDao<T> {
     void save(T t);
     void update(T t);
     void delete(int id);
+    Boolean existsById(int id);
 }
 

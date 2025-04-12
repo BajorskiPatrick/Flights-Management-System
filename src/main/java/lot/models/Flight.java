@@ -8,6 +8,7 @@ public class Flight {
     private String destination;
     private LocalDateTime departureDate;
     private int duration;
+    private int seatRowsAmount;
     private Boolean twoWay;
 
     /**
@@ -19,12 +20,13 @@ public class Flight {
      * @param duration flight's duration
      * @param twoWay boolean value indicating that this flight is a one-way (false) or a two-way (true) flight
      */
-    public Flight(int id, String departure, String destination, LocalDateTime departureDate, int duration, Boolean twoWay) {
+    public Flight(int id, String departure, String destination, LocalDateTime departureDate, int duration, int seatRowsAmount, Boolean twoWay) {
         this.id = id;
         this.departure = departure;
         this.destination = destination;
         this.departureDate = departureDate;
         this.duration = duration;
+        this.seatRowsAmount = seatRowsAmount;
         this.twoWay = twoWay;
     }
 
@@ -36,15 +38,20 @@ public class Flight {
      * @param duration flight's duration
      * @param twoWay boolean value indicating that this flight is a one-way (false) or a two-way (true) flight
      */
-    public Flight(String departure, String destination, LocalDateTime departureDate, int duration, Boolean twoWay) {
+    public Flight(String departure, String destination, LocalDateTime departureDate, int duration, int seatRowsAmount, Boolean twoWay) {
         this.id = -1;
         this.departure = departure;
         this.destination = destination;
         this.departureDate = departureDate;
         this.duration = duration;
+        this.seatRowsAmount = seatRowsAmount;
         this.twoWay = twoWay;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getId() {
         return id;
     }
@@ -85,6 +92,14 @@ public class Flight {
         this.duration = duration;
     }
 
+    public int getSeatRowsAmount() {
+        return seatRowsAmount;
+    }
+
+    public void setSeatRowsAmount(int seatRowsAmount) {
+        this.seatRowsAmount = seatRowsAmount;
+    }
+
     public Boolean getTwoWay() {
         return twoWay;
     }
@@ -101,6 +116,7 @@ public class Flight {
                 ", destination='" + destination + '\'' +
                 ", departureDate=" + departureDate +
                 ", duration=" + duration +
+                ", seatAmount=" + seatRowsAmount +
                 ", twoWay=" + twoWay +
                 '}';
     }

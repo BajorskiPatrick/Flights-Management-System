@@ -18,6 +18,7 @@ public class ResultSetMapper {
                 rs.getString("destination"),
                 rs.getObject("departureDate", LocalDateTime.class),
                 rs.getInt("duration"),
+                rs.getInt("seatRowsAmount"),
                 rs.getBoolean("twoWay")
         );
     }
@@ -39,8 +40,7 @@ public class ResultSetMapper {
                 rs.getInt("id"),
                 rs.getInt("flightId"),
                 rs.getInt("passengerId"),
-                rs.getString("seatNumber"),
-                ReservationDao.hasTakenPlace(rs.getInt("id"))
+                rs.getString("seatNumber")
         );
     }
 

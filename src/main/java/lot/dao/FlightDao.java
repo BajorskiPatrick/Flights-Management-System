@@ -9,6 +9,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FlightDao implements GenericDao<Flight> {
+    public Boolean hasTakenPlace(int flightId) {
+        String query =
+                """
+                SELECT 1
+                FROM flights f
+                WHERE f.id = ? AND f.departureDate > CURRENT_TIMESTAMP
+                """;
+        try (
+                Connection conn = DatabaseInitializer.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query);
+        ) {
+            ps.setInt(1, flightId);
+            ResultSet rs = ps.executeQuery();
+            return !rs.next();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
     @Override
     public Flight findById(int id) {
         String query =
@@ -24,8 +46,7 @@ public class FlightDao implements GenericDao<Flight> {
         ) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            Flight flight = ResultSetMapper.mapFlight(rs);
-            return flight;
+            return ResultSetMapper.mapFlight(rs);
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -67,8 +88,8 @@ public class FlightDao implements GenericDao<Flight> {
     public void save(Flight flight) {
         String query =
                 """
-                INSERT INTO flights (departure, destination, departureDate, duration, twoWay) VALUES
-                (?, ?, ?, ?, ?)
+                INSERT INTO flights (departure, destination, departureDate, duration, seatRowsAmount, twoWay) VALUES
+                (?, ?, ?, ?, ?, ?)
                 """;
         try (
                 Connection conn = DatabaseInitializer.getConnection();
@@ -78,6 +99,7 @@ public class FlightDao implements GenericDao<Flight> {
             ps.setString(2, flight.getDestination());
             ps.setTimestamp(3, Timestamp.valueOf(flight.getDepartureDate()));
             ps.setInt(4, flight.getDuration());
+            ps.setInt(5, flight.getSeatRowsAmount());
             ps.setBoolean(5, flight.getTwoWay());
 
             ps.executeUpdate();
@@ -92,7 +114,7 @@ public class FlightDao implements GenericDao<Flight> {
         String query =
                 """
                 UPDATE flights
-                SET departure = ?, destination = ?, departureDate = ?, duration = ?, twoWay = ?
+                SET departure = ?, destination = ?, departureDate = ?, duration = ?, seatRowsAmount = ?, twoWay = ?
                 WHERE id = ?
                 """;
         try (
@@ -103,6 +125,7 @@ public class FlightDao implements GenericDao<Flight> {
             ps.setString(2, flight.getDestination());
             ps.setTimestamp(3, Timestamp.valueOf(flight.getDepartureDate()));
             ps.setInt(4, flight.getDuration());
+            ps.setInt(5, flight.getSeatRowsAmount());
             ps.setBoolean(5, flight.getTwoWay());
             ps.setInt(5, flight.getId());
 
@@ -130,5 +153,29 @@ public class FlightDao implements GenericDao<Flight> {
         catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+
+    @Override
+    public Boolean existsById(int id) {
+        String query =
+                """
+                SELECT 1
+                FROM flights f
+                WHERE f.id = ?
+                """;
+        try (
+                Connection conn = DatabaseInitializer.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query)
+        ) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

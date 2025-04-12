@@ -13,6 +13,7 @@ create table if not exists flights (
     destination varchar(50) not null,
     departureDate timestamp not null,
     duration integer not null,
+    seatRowsAmount integer not null,
     twoWay boolean not null
 );
 
