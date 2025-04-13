@@ -15,8 +15,8 @@ public class ReservationDao implements GenericDao<Reservation> {
         String query =
                 """
                 SELECT *
-                FROM reservations r
-                WHERE r.id = ?
+                FROM reservations
+                WHERE id = ?
                 """;
 
         try (
@@ -25,6 +25,7 @@ public class ReservationDao implements GenericDao<Reservation> {
         ) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
+            rs.next();
             return ResultSetMapper.mapReservation(rs);
         }
         catch (SQLException e) {

@@ -46,12 +46,12 @@ public class FlightService {
     public Flight getFlightById(int flightId) {
         try {
             if (!flightDao.existsById(flightId)) {
-                throw new NotFoundException("Flight with id: " + flightId + " can not be fetched, because it was not found");
+                throw new NotFoundException("Flight with id: " + flightId + " can not be fetched, because it does not exists in the database");
             }
             return flightDao.findById(flightId);
         }
         catch (DatabaseActionException e) {
-            throw new ServiceException("Failed to fetch flight with id: " + flightId, e);
+            throw new ServiceException("Database error! Failed to fetch flight with id: " + flightId, e);
         }
     }
 
@@ -62,7 +62,7 @@ public class FlightService {
 
         try {
             if (!flightDao.existsById(flightId)) {
-                throw new NotFoundException("Flight with id: " + flightId + " can not be updated, because it was not found");
+                throw new NotFoundException("Flight with id: " + flightId + " can not be updated, because it does not exists in the database");
             }
             Flight flight = new Flight(flightId, departure, destination, dd, duration, seatRowsAmount, twoWay);
             flightDao.update(flight);
@@ -76,7 +76,7 @@ public class FlightService {
     public void deleteFlight(int flightId) {
         try {
             if (!flightDao.existsById(flightId)) {
-                throw new NotFoundException("Flight with id: " + flightId  + " can not be deleted, because it was not found");
+                throw new NotFoundException("Flight with id: " + flightId  + " can not be deleted, because it does not exists in the database");
             }
             flightDao.delete(flightId);
         }

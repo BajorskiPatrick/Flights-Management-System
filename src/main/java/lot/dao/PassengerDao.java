@@ -25,6 +25,7 @@ public class PassengerDao implements GenericDao<Passenger> {
         ) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
+            rs.next();
             return ResultSetMapper.mapPassenger(rs);
         }
         catch (SQLException e) {

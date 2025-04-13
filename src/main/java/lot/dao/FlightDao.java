@@ -37,7 +37,7 @@ public class FlightDao implements GenericDao<Flight> {
                 """
                 SELECT *
                 FROM flights f
-                WHERE f.id = ?
+                WHERE id = ?
                 """;
 
         try (
@@ -46,6 +46,7 @@ public class FlightDao implements GenericDao<Flight> {
         ) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
+            rs.next();
             return ResultSetMapper.mapFlight(rs);
         }
         catch (SQLException e) {
@@ -96,7 +97,7 @@ public class FlightDao implements GenericDao<Flight> {
             ps.setTimestamp(3, Timestamp.valueOf(flight.getDepartureDate()));
             ps.setInt(4, flight.getDuration());
             ps.setInt(5, flight.getSeatRowsAmount());
-            ps.setBoolean(5, flight.getTwoWay());
+            ps.setBoolean(6, flight.getTwoWay());
 
             ps.executeUpdate();
         }
@@ -122,8 +123,8 @@ public class FlightDao implements GenericDao<Flight> {
             ps.setTimestamp(3, Timestamp.valueOf(flight.getDepartureDate()));
             ps.setInt(4, flight.getDuration());
             ps.setInt(5, flight.getSeatRowsAmount());
-            ps.setBoolean(5, flight.getTwoWay());
-            ps.setInt(5, flight.getId());
+            ps.setBoolean(6, flight.getTwoWay());
+            ps.setInt(7, flight.getId());
 
             ps.executeUpdate();
         }
