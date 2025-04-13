@@ -1,14 +1,14 @@
 INSERT INTO flights (departure, destination, departureDate, duration, seatRowsAmount, twoWay) VALUES
-    ('Warszawa', 'Berlin','2025-06-15 08:00', 90,  42,FALSE),
-    ('Kraków', 'Paryż', '2025-05-10 10:30', 120, 36, TRUE),
-    ('Gdańsk', 'Londyn', '2025-04-08 15:40', 150, 42, FALSE),
-    ('Wrocław', 'Rzym', '2025-03-27 21:10', 180, 42, TRUE),
-    ('Poznań', 'Barcelona', '2025-05-26 12:30', 160, 48, FALSE),
-    ('Katowice', 'Ateny', '2025-06-08 06:15', 210, 36, TRUE),
-    ('Łódź', 'Wiedeń', '2025-07-23 03:30', 100, 36, FALSE),
-    ('Szczecin', 'Oslo', '2025-08-03 17:00', 190, 42, TRUE),
-    ('Rzeszów', 'Dublin', '2025-07-18 19:20', 170, 48, FALSE),
-    ('Bydgoszcz', 'Sztokholm', '2025-06-30 20:00', 140, 48, TRUE);
+    ('Warszawa', 'Berlin','2025-06-15 08:00', 90,  7,FALSE),
+    ('Kraków', 'Paryż', '2025-05-10 10:30', 120, 6, TRUE),
+    ('Gdańsk', 'Londyn', '2025-04-08 15:40', 150, 7, FALSE),
+    ('Wrocław', 'Rzym', '2025-03-27 21:10', 180, 7, TRUE),
+    ('Poznań', 'Barcelona', '2025-05-26 12:30', 160, 8, FALSE),
+    ('Katowice', 'Ateny', '2025-06-08 06:15', 210, 6, TRUE),
+    ('Łódź', 'Wiedeń', '2025-07-23 03:30', 100, 6, FALSE),
+    ('Szczecin', 'Oslo', '2025-08-03 17:00', 190, 7, TRUE),
+    ('Rzeszów', 'Dublin', '2025-07-18 19:20', 170, 8, FALSE),
+    ('Bydgoszcz', 'Sztokholm', '2025-06-30 20:00', 140, 8, TRUE);
 
 
 INSERT INTO passengers (name, surname, email, phoneNumber) VALUES

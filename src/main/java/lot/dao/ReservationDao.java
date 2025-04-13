@@ -1,13 +1,12 @@
 package lot.dao;
 
-import lot.config.DatabaseInitializer;
+import lot.database.DatabaseInitializer;
 import lot.exceptions.dao.DatabaseActionException;
 import lot.models.Reservation;
 import lot.utils.ResultSetMapper;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ReservationDao implements GenericDao<Reservation> {
     @Override
@@ -26,10 +25,13 @@ public class ReservationDao implements GenericDao<Reservation> {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             rs.next();
-            return ResultSetMapper.mapReservation(rs);
+            Reservation reservation = ResultSetMapper.mapReservation(rs);
+            reservation.setTookPlace(this.hasTakenPlace(reservation.getFlightId()));
+            rs.close();
+            return reservation;
         }
         catch (SQLException e) {
-            throw new DatabaseActionException("Database error while fetching reservation details", e);
+            throw new DatabaseActionException("Database error while fetching reservation details by reservationId", e);
         }
     }
 
@@ -49,8 +51,11 @@ public class ReservationDao implements GenericDao<Reservation> {
         ) {
             ResultSet rs = statement.executeQuery(query);
             while (rs.next()) {
-                reservations.add(ResultSetMapper.mapReservation(rs));
+                Reservation reservation = ResultSetMapper.mapReservation(rs);
+                reservation.setTookPlace(this.hasTakenPlace(reservation.getFlightId()));
+                reservations.add(reservation);
             }
+            rs.close();
             return reservations;
         }
         catch (SQLException e) {
@@ -58,8 +63,41 @@ public class ReservationDao implements GenericDao<Reservation> {
         }
     }
 
+
+    public List<Reservation> findAllByForeignKey(String foreignKeyTable, int foreignKeyId) throws DatabaseActionException {
+        Map<String, String> allowedTables = new HashMap<>();
+        allowedTables.put("flights", "flightId");
+        allowedTables.put("passengers", "passengerId");
+
+        foreignKeyTable = foreignKeyTable.toLowerCase().trim();
+
+        if (!allowedTables.containsKey(foreignKeyTable)) {
+            throw new DatabaseActionException("Column of table " + foreignKeyTable + " does not exist in reservations table as a foreign key");
+        }
+
+        List<Reservation> reservations = new ArrayList<>();
+        String query = "SELECT * FROM reservations WHERE " + allowedTables.get(foreignKeyTable) + " = ?";
+        try (
+                Connection conn = DatabaseInitializer.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query)
+        ) {
+            ps.setInt(1, foreignKeyId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Reservation reservation = ResultSetMapper.mapReservation(rs);
+                reservation.setTookPlace(this.hasTakenPlace(reservation.getFlightId()));
+                reservations.add(reservation);
+            }
+            rs.close();
+            return reservations;
+        }
+        catch (SQLException e) {
+            throw new DatabaseActionException("Database error while fetching reservations details by " + foreignKeyTable + "Id", e);
+        }
+    }
+
     @Override
-    public void save(Reservation reservation) throws DatabaseActionException {
+    public int save(Reservation reservation) throws DatabaseActionException {
         String query =
                 """
                 INSERT INTO reservations (flightId, passengerId, seatNumber) VALUES 
@@ -67,13 +105,23 @@ public class ReservationDao implements GenericDao<Reservation> {
                 """;
         try (
                 Connection conn = DatabaseInitializer.getConnection();
-                PreparedStatement ps = conn.prepareStatement(query)
+                PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)
         ) {
             ps.setInt(1, reservation.getFlightId());
             ps.setInt(2, reservation.getPassengerId());
             ps.setString(3, reservation.getSeatNumber());
 
             ps.executeUpdate();
+
+            int newId;
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    newId = generatedKeys.getInt(1);
+                } else {
+                    throw new DatabaseActionException("No generated ID received after saving new reservation");
+                }
+            }
+            return newId;
         }
         catch (SQLException e) {
             throw new DatabaseActionException("Database error while saving new reservation", e);
@@ -137,10 +185,34 @@ public class ReservationDao implements GenericDao<Reservation> {
         ) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            return rs.next();
+            Boolean res = rs.next();
+            rs.close();
+            return res;
         }
         catch (SQLException e) {
             throw new DatabaseActionException("Database error while checking if the reservation exists", e);
+        }
+    }
+
+    public Boolean hasTakenPlace(int flightId) throws DatabaseActionException {
+        String query =
+                """
+                SELECT 1
+                FROM flights f
+                WHERE f.id = ? AND f.departureDate > CURRENT_TIMESTAMP
+                """;
+        try (
+                Connection conn = DatabaseInitializer.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query);
+        ) {
+            ps.setInt(1, flightId);
+            ResultSet rs = ps.executeQuery();
+            Boolean res = !rs.next();
+            rs.close();
+            return res;
+        }
+        catch (SQLException e) {
+            throw new DatabaseActionException("Database error while checking if flight assigned to reservation has already taken place", e);
         }
     }
 }

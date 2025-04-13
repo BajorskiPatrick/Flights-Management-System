@@ -1,6 +1,6 @@
 package lot.dao;
 
-import lot.config.DatabaseInitializer;
+import lot.database.DatabaseInitializer;
 import lot.exceptions.dao.DatabaseActionException;
 import lot.models.Passenger;
 import lot.utils.ResultSetMapper;
@@ -26,7 +26,9 @@ public class PassengerDao implements GenericDao<Passenger> {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             rs.next();
-            return ResultSetMapper.mapPassenger(rs);
+            Passenger passenger = ResultSetMapper.mapPassenger(rs);
+            rs.close();
+            return passenger;
         }
         catch (SQLException e) {
             throw new DatabaseActionException("Database error while fetching passenger details", e);
@@ -52,6 +54,7 @@ public class PassengerDao implements GenericDao<Passenger> {
             while (rs.next()) {
                 passengers.add(ResultSetMapper.mapPassenger(rs));
             }
+            rs.close();
             return passengers;
         }
         catch (SQLException e) {
@@ -61,7 +64,7 @@ public class PassengerDao implements GenericDao<Passenger> {
 
 
     @Override
-    public void save(Passenger passenger) throws DatabaseActionException {
+    public int save(Passenger passenger) throws DatabaseActionException {
         String query =
                 """
                 INSERT INTO passengers (name, surname, email, phoneNumber) VALUES 
@@ -69,7 +72,7 @@ public class PassengerDao implements GenericDao<Passenger> {
                 """;
         try (
                 Connection conn = DatabaseInitializer.getConnection();
-                PreparedStatement ps = conn.prepareStatement(query)
+                PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, passenger.getName());
             ps.setString(2, passenger.getSurname());
@@ -77,6 +80,16 @@ public class PassengerDao implements GenericDao<Passenger> {
             ps.setString(4, passenger.getPhoneNumber());
 
             ps.executeUpdate();
+
+            int newId;
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    newId = generatedKeys.getInt(1);
+                } else {
+                    throw new DatabaseActionException("No generated ID received after saving new passenger");
+                }
+            }
+            return newId;
         }
         catch (SQLException e) {
             throw new DatabaseActionException("Database error while saving new passenger", e);
@@ -141,7 +154,9 @@ public class PassengerDao implements GenericDao<Passenger> {
         ) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            return rs.next();
+            Boolean res = rs.next();
+            rs.close();
+            return res;
         }
         catch (SQLException e) {
             throw new DatabaseActionException("Database error while checking if passenger exists", e);

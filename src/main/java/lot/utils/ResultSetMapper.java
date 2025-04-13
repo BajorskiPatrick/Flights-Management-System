@@ -49,7 +49,7 @@ public class ResultSetMapper {
         return new Seat(
                 rs.getInt("flightId"),
                 rs.getString("seatNumber"),
-                rs.getBoolean("isAvailable")
+                rs.getBoolean("available")
         );
     }
 }

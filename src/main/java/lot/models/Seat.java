@@ -35,4 +35,13 @@ public class Seat {
     public void setAvailable(Boolean available) {
         isAvailable = available;
     }
+
+    @Override
+    public String toString() {
+        return "Seat{" +
+                "flightId=" + flightId +
+                ", seatNumber='" + seatNumber + '\'' +
+                ", isAvailable=" + isAvailable +
+                '}';
+    }
 }

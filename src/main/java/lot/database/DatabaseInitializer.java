@@ -1,4 +1,4 @@
-package lot.config;
+package lot.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -33,12 +33,14 @@ public class DatabaseInitializer {
 
         int countBefore = countTables(conn);
         stmt.execute(schemaQuery);
+        schema.close();
         int countAfter = countTables(conn);
 
         if (countAfter > countBefore) {
             InputStream data = DatabaseInitializer.class.getResourceAsStream("/db/data.sql");
             String dataQuery = new String(data.readAllBytes(), StandardCharsets.UTF_8);
             stmt.execute(dataQuery);
+            data.close();
         }
 
         stmt.close();

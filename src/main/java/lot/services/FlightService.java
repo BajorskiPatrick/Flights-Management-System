@@ -19,16 +19,17 @@ public class FlightService {
         this.flightDao = flightDao;
     }
 
-    public void addNewFlight(String departure, String destination, String departureDate, int duration, int seatRowsAmount, Boolean twoWay) {
+    public int addNewFlight(String departure, String destination, String departureDate, int duration, int seatRowsAmount, Boolean twoWay) {
         validateData(departureDate, duration, seatRowsAmount);
         LocalDateTime dd = LocalDateTime.parse(departureDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
         Flight flight = new Flight(departure, destination, dd, duration, seatRowsAmount, twoWay);
 
         try {
-            flightDao.save(flight);
+            int id = flightDao.save(flight);
+            return id;
         }
         catch (DatabaseActionException e) {
-            throw new ServiceException("Failed to save flight", e);
+            throw new ServiceException("Failed to save new flight due to some database problem", e);
         }
     }
 
@@ -38,7 +39,7 @@ public class FlightService {
             return flightDao.findAll();
         }
         catch (DatabaseActionException e) {
-            throw new ServiceException("Failed to fetch all flights", e);
+            throw new ServiceException("Failed to fetch all flights due to some database problem", e);
         }
     }
 
@@ -51,24 +52,48 @@ public class FlightService {
             return flightDao.findById(flightId);
         }
         catch (DatabaseActionException e) {
-            throw new ServiceException("Database error! Failed to fetch flight with id: " + flightId, e);
+            throw new ServiceException("Failed to fetch flight with id: " + flightId + " due to some database problem", e);
+        }
+    }
+
+    public List<String> getAvailableSeats(int flightId) {
+        try {
+            return flightDao.getAvailableSeatsNumbers(flightId);
+        }
+        catch (DatabaseActionException e) {
+            throw new ServiceException("Failed to fetch available seats numbers for flight with id: " + flightId + " due to some database problem", e);
         }
     }
 
 
     public void updateExistingFlight(int flightId, String departure, String destination, String departureDate, int duration, int seatRowsAmount, Boolean twoWay) {
+        Flight flight;
+        try {
+            flight = getFlightById(flightId);
+        }
+        catch (NotFoundException e) {
+            throw new NotFoundException("Flight with id: " + flightId + " can not be updated, because it does not exists in the database");
+        }
+
         validateData(departureDate, duration, seatRowsAmount);
         LocalDateTime dd = LocalDateTime.parse(departureDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 
+        if (seatRowsAmount < flight.getSeatRowsAmount()) {
+            throw new ValidationException("New seat rows amount must be greater or equal to previous seat rows amount");
+        }
+
+
         try {
-            if (!flightDao.existsById(flightId)) {
-                throw new NotFoundException("Flight with id: " + flightId + " can not be updated, because it does not exists in the database");
+            Flight newFlight = new Flight(flightId, departure, destination, dd, duration, seatRowsAmount, twoWay);
+            if (seatRowsAmount == flight.getSeatRowsAmount()) {
+                flightDao.update(newFlight);
             }
-            Flight flight = new Flight(flightId, departure, destination, dd, duration, seatRowsAmount, twoWay);
-            flightDao.update(flight);
+            else {
+                flightDao.update(newFlight, flight.getSeatRowsAmount());
+            }
         }
         catch (DatabaseActionException e) {
-            throw new ServiceException("Failed to update flight with id: " + flightId, e);
+            throw new ServiceException("Failed to update flight with id: " + flightId + " due to some database problem", e);
         }
     }
 
@@ -81,12 +106,12 @@ public class FlightService {
             flightDao.delete(flightId);
         }
         catch (DatabaseActionException e) {
-            throw new ServiceException("Failed to delete flight with id: " + flightId, e);
+            throw new ServiceException("Failed to delete flight with id: " + flightId + " due to some database problem", e);
         }
     }
 
 
-    public void validateData(String departureDate, int duration, int seatRowsAmount) {
+    private void validateData(String departureDate, int duration, int seatRowsAmount) {
         LocalDateTime dd;
         try {
             dd = LocalDateTime.parse(departureDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));

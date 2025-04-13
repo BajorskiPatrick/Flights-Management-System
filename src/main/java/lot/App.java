@@ -1,11 +1,15 @@
 package lot;
 
-import lot.config.DatabaseInitializer;
 import lot.dao.FlightDao;
+import lot.dao.PassengerDao;
 import lot.dao.ReservationDao;
+import lot.database.DatabaseInitializer;
 import lot.exceptions.dao.DatabaseActionException;
-import lot.models.Flight;
-import lot.models.Reservation;
+import lot.exceptions.services.ServiceException;
+import lot.models.Seat;
+import lot.services.EmailService;
+import lot.services.FlightService;
+import lot.services.PassengerService;
 import lot.services.ReservationService;
 import lot.utils.ResultSetMapper;
 
@@ -14,6 +18,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 
 public class App {
@@ -28,30 +33,131 @@ public class App {
             e.printStackTrace();
         }
 
-        FlightDao fd = new FlightDao();
-        ReservationDao rd = new ReservationDao();
+        //(1, 1, '1A'),
+
+        ReservationService rs = new ReservationService(new ReservationDao(), new FlightDao(), new PassengerDao(), new EmailService());
+        FlightService fs = new FlightService(new FlightDao());
+        PassengerService ps = new PassengerService(new PassengerDao());
         try {
-            Flight f = fd.findById(2);
-//            Reservation r1 = rd.findById(1);
-//            Reservation r2 = rd.findById(2);
-//            Reservation r3 = rd.findById(3);
-            System.out.println(f);
-//            System.out.println(r1);
-//            System.out.println(r2);
-//            System.out.println(r3);
-//
-//            fd.delete(1);
-
-//            Reservation r1b = rd.findById(1);
-//            Reservation r2b = rd.findById(2);
-//            Reservation r3b = rd.findById(3);
-//            System.out.println(r1b);
-//            System.out.println(r2b);
-//            System.out.println(r3b);
-
-        } catch (DatabaseActionException e) {
-            System.err.println(e.getMessage());
+//            System.out.println(rs.getReservationsByPassengerId(1));
+//            ps.deletePassenger(1);
+//            System.out.println(rs.getReservationsByPassengerId(1));
+            int passId = ps.addNewPassenger("Patrick", "Bajorski", "bajorski16@gmail.com", "790356300");
+            int resId = rs.makeNewReservation(5, passId, "7F");
+            System.out.println(ps.getPassengerById(passId));
+            System.out.println(rs.getReservationById(resId));
         }
+        catch (ServiceException e) {
+            e.printStackTrace();
+        }
+
+//        try {
+//            System.out.println(rs.getReservationById(1));
+//            System.out.println("-------------------------------------");
+//            System.out.println(fs.getAvailableSeats(1));
+//
+//            System.out.println();
+//            System.out.println();
+//
+//            rs.updateExistingReservation(1, 1, 1, "7B");
+//            System.out.println(rs.getReservationById(1));
+//            System.out.println("-------------------------------------");
+//            System.out.println(fs.getAvailableSeats(1));
+//
+//            System.out.println();
+//            System.out.println();
+//
+//            rs.makeNewReservation(3, 1, "7B");
+//            System.out.println(rs.getAllReservations());
+//            System.out.println("-------------------------------------");
+//            System.out.println(fs.getAvailableSeats(3));
+//        }
+//        catch (ServiceException e) {
+//            System.err.println(e.getMessage());
+//        }
+
+
+//        String query1 =
+//                """
+//                SELECT *
+//                FROM seats
+//                WHERE flightId = 1
+//                """;
+//
+//        String query2 =
+//                """
+//                DELETE FROM reservations
+//                WHERE flightId = 1 AND passengerId = 1
+//                """;
+//
+//
+//        try (
+//                Connection conn = DatabaseInitializer.getConnection();
+//                Statement stmt = conn.createStatement();
+//        ) {
+//            ResultSet rs1 = stmt.executeQuery(query1);
+//            while (rs1.next()) {
+//                System.out.println(ResultSetMapper.mapSeat(rs1));
+//            }
+//            rs1.close();
+//
+//            System.out.println();
+//
+//            stmt.executeUpdate(query2);
+//
+//            ResultSet rs2 = stmt.executeQuery(query1);
+//            while (rs2.next()) {
+//                System.out.println(ResultSetMapper.mapSeat(rs2));
+//            }
+//        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+
+//        EmailService emailService = new EmailService();
+//        emailService.sendConfirmationEmail("bajorski16@gmail.com", "Testowy email");
+
+//        FlightService fs = new FlightService(new FlightDao());
+//        try {
+//            List<Flight> flights = fs.getAllFlights();
+//            for (Flight flight : flights) {
+//                System.out.println(flight);
+//            }
+//            System.out.println();
+//
+//            fs.addNewFlight("Kraków", "Dallas", "2025-06-15 12:00", -1, 10, true);
+//
+//            List<Flight> flights2 = fs.getAllFlights();
+//            for (Flight flight : flights2) {
+//                System.out.println(flight);
+//            }
+//            System.out.println();
+//
+////            fs.updateExistingFlight(11,"Kraków", "Dallas", "2025-06-15 12:00", 800, 10, true);
+////
+////            List<Flight> flights3 = fs.getAllFlights();
+////            for (Flight flight : flights3) {
+////                System.out.println(flight);
+////            }
+////            System.out.println();
+////
+////            fs.deleteFlight(11);
+////
+////            List<Flight> flights4 = fs.getAllFlights();
+////            for (Flight flight : flights4) {
+////                System.out.println(flight);
+////            }
+////            System.out.println();
+//        }
+//        catch (ServiceException e) {
+//            e.printStackTrace();
+//        }
+//        catch (NotFoundException e) {
+//            System.err.println(e.getMessage());
+//        }
+//        catch (ValidationException e) {
+//            System.err.println(e.getMessage());
+//        }
     }
 }
 
