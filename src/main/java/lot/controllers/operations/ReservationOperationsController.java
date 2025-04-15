@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import lot.controllers.menu.MenuController;
+import lot.exceptions.dao.DatabaseActionException;
 import lot.exceptions.services.EmailException;
 import lot.exceptions.services.NotFoundException;
 import lot.exceptions.services.ServiceException;
@@ -21,67 +22,66 @@ import lot.services.ReservationService;
 
 import javafx.event.ActionEvent;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ReservationOperationsController {
     @FXML
     private TableView<Reservation> reservationTable;
-
     @FXML
     private TableColumn<Reservation, Integer> idColumn;
-
     @FXML
     private TableColumn<Reservation, Integer> flightIdColumn;
-
     @FXML
     private TableColumn<Reservation, Integer> passengerIdColumn;
-
+    @FXML
+    public TableColumn<Reservation, String> passengerNameColumn;
+    @FXML
+    public TableColumn<Reservation, String> passengerSurnameColumn;
     @FXML
     private TableColumn<Reservation, String> seatNumberColumn;
-
+    @FXML
+    public TableColumn<Reservation, LocalDateTime> departureDateColumn;
     @FXML
     private TableColumn<Reservation, Boolean> tookPlaceColumn;
+    @FXML
+    public TextField surnameSearchField;
+    @FXML
+    public ComboBox<Integer> idSearchField;
+    @FXML
+    public ComboBox<Integer> flightIdSearchField;
+    @FXML
+    public ComboBox<Integer> passengerIdSearchField;
 
     @FXML
     private ComboBox<Integer> deleteId;
-
     @FXML
     private Label choiceLabel;
+    @FXML
+    private AnchorPane deletionPane;
 
     @FXML
     private ComboBox<Integer> flightIdBox;
-
     @FXML
     private ComboBox<Integer> passengerIdBox;
-
     @FXML
     private ComboBox<String> seatNumberBox;
-
     @FXML
     private Label addLabel;
-
     @FXML
     private AnchorPane addPane;
 
     @FXML
     private ComboBox<Integer> idToUpdateSelectorBox;
-
     @FXML
     private ComboBox<Integer> updateFlightIdBox;
-
     @FXML
     private ComboBox<Integer> updatePassengerIdBox;
-
     @FXML
     private ComboBox<String> updateSeatNumberBox;
-
     @FXML
     private AnchorPane updatePane;
-
-    @FXML
-    private AnchorPane deletionPane;
-
     @FXML
     private Label updateLabel;
 
@@ -89,17 +89,28 @@ public class ReservationOperationsController {
     private ObservableList<Integer> flightIds = FXCollections.observableArrayList();
     private ObservableList<Integer> passengerIds = FXCollections.observableArrayList();
     private ObservableList<String> availableSeatsNumbers = FXCollections.observableArrayList();
-
     private Stage stage;
     private Scene scene;
     private Parent root;
-
     private final ReservationService reservationService;
 
     public ReservationOperationsController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 
+    @FXML
+    public void initialize() {
+        if (reservationTable != null) {
+            idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+            flightIdColumn.setCellValueFactory(new PropertyValueFactory<>("flightId"));
+            passengerIdColumn.setCellValueFactory(new PropertyValueFactory<>("passengerId"));
+            passengerNameColumn.setCellValueFactory(new PropertyValueFactory<>("passengerName"));
+            passengerSurnameColumn.setCellValueFactory(new PropertyValueFactory<>("passengerSurname"));
+            seatNumberColumn.setCellValueFactory(new PropertyValueFactory<>("seatNumber"));
+            departureDateColumn.setCellValueFactory(new PropertyValueFactory<>("departureDate"));
+            tookPlaceColumn.setCellValueFactory(new PropertyValueFactory<>("tookPlace"));
+        }
+    }
 
     public void configureReservationIds(String type) {
         reservationIds.addAll(reservationService.getIds().stream().sorted().collect(Collectors.toList()));
@@ -137,37 +148,8 @@ public class ReservationOperationsController {
         }
     }
 
-    private void getAvailableSeats(ActionEvent event) {
-        ComboBox<Integer> choice = (ComboBox<Integer>) event.getSource();
 
-        if (choice.getValue() == null) {
-            return;
-        }
-
-        availableSeatsNumbers.clear();
-        availableSeatsNumbers.addAll(reservationService.getAvailableSeats(choice.getValue()));
-
-        if (seatNumberBox != null) {
-            seatNumberBox.setItems(availableSeatsNumbers);
-            seatNumberBox.setVisibleRowCount(5);
-        }
-        else if (updateSeatNumberBox != null) {
-            updateSeatNumberBox.setItems(availableSeatsNumbers);
-            updateSeatNumberBox.setVisibleRowCount(5);
-        }
-    }
-
-
-    public void configureTableColumns() {
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        flightIdColumn.setCellValueFactory(new PropertyValueFactory<>("flightId"));
-        passengerIdColumn.setCellValueFactory(new PropertyValueFactory<>("passengerId"));
-        seatNumberColumn.setCellValueFactory(new PropertyValueFactory<>("seatNumber"));
-        tookPlaceColumn.setCellValueFactory(new PropertyValueFactory<>("tookPlace"));
-    }
-
-
-    public void loadReservations() {
+    public void seeAllReservations() {
         try {
             List<Reservation> reservations = reservationService.getAllReservations();
             ObservableList<Reservation> flightObservableList = FXCollections.observableArrayList(reservations);
@@ -177,27 +159,102 @@ public class ReservationOperationsController {
         }
     }
 
+    @FXML
+    private void changeVisibility(ActionEvent event) {
+        Button button = (Button) event.getSource();
+        String id = button.getId();
+        switch (id) {
+            case "buttonIdSearch":
+                surnameSearchField.clear();
 
-    public void goBack(ActionEvent event) throws IOException {
-        loadView("/lot/views/menu/MenuView.fxml", event);
-    }
+                surnameSearchField.setVisible(false);
+                flightIdSearchField.setVisible(false);
+                passengerIdSearchField.setVisible(false);
+                idSearchField.setVisible(true);
+                reservationIds.clear();
+                reservationIds.addAll(reservationService.getIds().stream().sorted().collect(Collectors.toList()));
+                idSearchField.setItems(reservationIds);
+                idSearchField.setVisibleRowCount(5);
+                idSearchField.setPromptText("Select ID");
+                break;
+            case "buttonFlightIdSearch":
+                surnameSearchField.clear();
 
-    private void loadView(String viewPath, ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));
-        root = loader.load();
-        MenuController controller = loader.getController();
-        controller.setResourceType("reservation");
-        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/lot/css/Menu.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
+                surnameSearchField.setVisible(false);
+                flightIdSearchField.setVisible(true);
+                passengerIdSearchField.setVisible(false);
+                idSearchField.setVisible(false);
+                flightIds.clear();
+                flightIds.addAll(reservationService.getFlightIds().stream().sorted().collect(Collectors.toList()));
+                flightIdSearchField.setItems(flightIds);
+                flightIdSearchField.setVisibleRowCount(5);
+                flightIdSearchField.setPromptText("Select flight ID");
+                break;
+            case "buttonPassengerIdSearch":
+                surnameSearchField.clear();
+
+                surnameSearchField.setVisible(false);
+                flightIdSearchField.setVisible(false);
+                passengerIdSearchField.setVisible(true);
+                idSearchField.setVisible(false);
+                passengerIds.clear();
+                passengerIds.addAll(reservationService.getPassengerIds().stream().sorted().collect(Collectors.toList()));
+                passengerIdSearchField.setItems(passengerIds);
+                passengerIdSearchField.setVisibleRowCount(5);
+                passengerIdSearchField.setPromptText("Select passenger ID");
+                break;
+            case "buttonSurnameSearch":
+                flightIdSearchField.getSelectionModel().clearSelection();
+                passengerIdSearchField.getSelectionModel().clearSelection();
+                idSearchField.getSelectionModel().clearSelection();
+
+                surnameSearchField.setVisible(true);
+                flightIdSearchField.setVisible(false);
+                passengerIdSearchField.setVisible(false);
+                idSearchField.setVisible(false);
+                break;
+        }
     }
 
     @FXML
-    private void changeDeletionLabel(ActionEvent event) {
-        Integer choice = deleteId.getValue();
-        choiceLabel.setText("You choose id: " + choice);
+    private void performSearchByCriteria(ActionEvent event) {
+        try {
+            if (surnameSearchField.isVisible()) {
+                String surname = surnameSearchField.getText();
+                if (surname.isEmpty()) {
+                    return;
+                }
+                List<Reservation> reservations = reservationService.getReservationBySurname(surname);
+                reservationTable.setItems(FXCollections.observableArrayList(reservations));
+            }
+            else if (flightIdSearchField.isVisible()) {
+                Integer flightId = flightIdSearchField.getValue();
+                if (flightId == null) {
+                    return;
+                }
+                List<Reservation> reservations = reservationService.getReservationsByFlightId(flightId);
+                reservationTable.setItems(FXCollections.observableArrayList(reservations));
+            }
+            else if (passengerIdSearchField.isVisible()) {
+                Integer passengerId = passengerIdSearchField.getValue();
+                if (passengerId == null) {
+                    return;
+                }
+                List<Reservation> reservations = reservationService.getReservationsByPassengerId(passengerId);
+                reservationTable.setItems(FXCollections.observableArrayList(reservations));
+            }
+            else if (idSearchField.isVisible()) {
+                Integer id = idSearchField.getValue();
+                if (id == null) {
+                    return;
+                }
+                Reservation reservation = reservationService.getReservationById(id);
+                reservationTable.setItems(FXCollections.observableArrayList(reservation));
+            }
+        }
+        catch (ServiceException e) {
+            showApplicationErrorMessage(e.getMessage());
+        }
     }
 
     @FXML
@@ -235,6 +292,8 @@ public class ReservationOperationsController {
         Integer passengerIdChoice = passengerIdBox.getValue();
         String seatNumber = seatNumberBox.getValue();
 
+        boolean hasBeenSent = true;
+
         if (flightIdChoice == null || passengerIdChoice == null || seatNumber.isEmpty()) {
             addLabel.setText("You need to provide all information!");
             addLabel.setTextFill(Color.RED);
@@ -245,11 +304,6 @@ public class ReservationOperationsController {
         try {
             id = reservationService.makeNewReservation(flightIdChoice, passengerIdChoice, seatNumber);
         }
-//        catch (ValidationException e) {
-//            showDataErrorMessage(e.getMessage());
-//            clearForm(addPane);
-//            return;
-//        }
         catch (ServiceException e) {
             showApplicationErrorMessage(e.getMessage());
             clearForm(addPane, "Type new reservation data");
@@ -261,12 +315,14 @@ public class ReservationOperationsController {
         }
         catch (EmailException e) {
             showApplicationErrorMessage(e.getMessage());
+            e.printStackTrace();
+            hasBeenSent = false;
         }
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Adding new reservation");
-        alert.setHeaderText("Reservation with id: " + id  + " has been added successfully\n" +
-                "Confirmation email has been automatically sent");
+        alert.setHeaderText("Reservation with id: " + id  + " has been added successfully\n"
+                + (hasBeenSent ? "\nConfirmation email has been automatically sent" : ""));
         alert.showAndWait();
 
         clearForm(addPane, "Type new reservation data");
@@ -280,6 +336,8 @@ public class ReservationOperationsController {
         Integer flightIdChoice = updateFlightIdBox.getValue();
         Integer passengerIdChoice = updatePassengerIdBox.getValue();
         String seatNumber = updateSeatNumberBox.getValue();
+
+        boolean hasBeenSent = true;
 
         if (reservationIdChoice == null || flightIdChoice == null || passengerIdChoice == null || seatNumber.isEmpty()) {
             updateLabel.setText("You need to provide all information!");
@@ -301,12 +359,13 @@ public class ReservationOperationsController {
         }
         catch (EmailException e) {
             showApplicationErrorMessage(e.getMessage());
+            hasBeenSent = false;
         }
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Updating reservation");
-        alert.setHeaderText("Reservation with id: " + reservationIdChoice  + " has been updated successfully\n" +
-                "Confirmation email has been automatically sent");
+        alert.setHeaderText("Reservation with id: " + reservationIdChoice  + " has been updated successfully"
+                + (hasBeenSent ? "\nConfirmation email has been automatically sent" : ""));
         alert.showAndWait();
 
         clearForm(updatePane, "Provide updated data (first, on the left, select which to update)");
@@ -316,6 +375,49 @@ public class ReservationOperationsController {
         updateSeatNumberBox.setItems(availableSeatsNumbers);
         updateFlightIdBox.setItems(flightIds);
         updatePassengerIdBox.setItems(passengerIds);
+    }
+
+    @FXML
+    private void changeDeletionLabel(ActionEvent event) {
+        Integer choice = deleteId.getValue();
+        choiceLabel.setText("You choose id: " + choice);
+    }
+
+    @FXML
+    private void goBack(ActionEvent event) throws IOException {
+        loadView("/lot/views/menu/MenuView.fxml", event);
+    }
+
+    private void loadView(String viewPath, ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));
+        root = loader.load();
+        MenuController controller = loader.getController();
+        controller.setResourceType("reservation");
+        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/lot/css/Menu.css").toExternalForm());
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private void getAvailableSeats(ActionEvent event) {
+        ComboBox<Integer> choice = (ComboBox<Integer>) event.getSource();
+
+        if (choice.getValue() == null) {
+            return;
+        }
+
+        availableSeatsNumbers.clear();
+        availableSeatsNumbers.addAll(reservationService.getAvailableSeats(choice.getValue()));
+
+        if (seatNumberBox != null) {
+            seatNumberBox.setItems(availableSeatsNumbers);
+            seatNumberBox.setVisibleRowCount(5);
+        }
+        else if (updateSeatNumberBox != null) {
+            updateSeatNumberBox.setItems(availableSeatsNumbers);
+            updateSeatNumberBox.setVisibleRowCount(5);
+        }
     }
 
     private void loadSelectedReservationDetails(ActionEvent event) {

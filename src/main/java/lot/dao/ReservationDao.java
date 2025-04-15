@@ -13,9 +13,11 @@ public class ReservationDao implements GenericDao<Reservation> {
     public Reservation findById(int id) throws DatabaseActionException {
         String query =
                 """
-                SELECT *
-                FROM reservations
-                WHERE id = ?
+                SELECT r.id, r.flightId, r.passengerId, p.name, p.surname, r.seatNumber, f.departureDate
+                FROM reservations r
+                JOIN passengers p ON r.passengerId = p.id
+                JOIN flights f ON r.flightId = f.id
+                WHERE r.id = ?
                 """;
 
         try (
@@ -41,8 +43,10 @@ public class ReservationDao implements GenericDao<Reservation> {
 
         String query =
                 """
-                SELECT *
-                FROM reservations
+                SELECT r.id, r.flightId, r.passengerId, p.name, p.surname, r.seatNumber, f.departureDate
+                FROM reservations r
+                JOIN passengers p ON r.passengerId = p.id
+                JOIN flights f ON r.flightId = f.id
                 """;
 
         try (
@@ -76,7 +80,15 @@ public class ReservationDao implements GenericDao<Reservation> {
         }
 
         List<Reservation> reservations = new ArrayList<>();
-        String query = "SELECT * FROM reservations WHERE " + allowedTables.get(foreignKeyTable) + " = ?";
+        String query =
+                """
+                SELECT r.id, r.flightId, r.passengerId, p.name, p.surname, r.seatNumber, f.departureDate
+                FROM reservations r
+                JOIN passengers p ON r.passengerId = p.id
+                JOIN flights f ON r.flightId = f.id
+                WHERE r.
+                """;
+        query += allowedTables.get(foreignKeyTable) + " = ?";
         try (
                 Connection conn = DatabaseInitializer.getConnection();
                 PreparedStatement ps = conn.prepareStatement(query)
@@ -93,6 +105,35 @@ public class ReservationDao implements GenericDao<Reservation> {
         }
         catch (SQLException e) {
             throw new DatabaseActionException("Database error while fetching reservations details by " + foreignKeyTable + "Id", e);
+        }
+    }
+
+    public List<Reservation> findAllBySurname(String surname) throws DatabaseActionException {
+        List<Reservation> reservations = new ArrayList<>();
+        String query =
+                """
+                SELECT r.id, r.flightId, r.passengerId, p.name, p.surname, r.seatNumber, f.departureDate
+                FROM reservations r
+                JOIN passengers p ON r.passengerId = p.id
+                JOIN flights f ON r.flightId = f.id
+                WHERE p.surname = ?
+                """;
+        try (
+                Connection conn = DatabaseInitializer.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query);
+        ) {
+            ps.setString(1, surname);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Reservation reservation = ResultSetMapper.mapReservation(rs);
+                reservation.setTookPlace(this.hasTakenPlace(reservation.getFlightId()));
+                reservations.add(reservation);
+            }
+            rs.close();
+            return reservations;
+        }
+        catch (SQLException e) {
+            throw new DatabaseActionException("Database error while fetching reservations details by surname: " + surname, e);
         }
     }
 

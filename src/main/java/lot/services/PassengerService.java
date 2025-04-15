@@ -60,6 +60,15 @@ public class PassengerService {
         }
     }
 
+    public List<Passenger> getPassengerBySurname(String surname) {
+        try {
+            return passengerDao.findBySurname(surname);
+        }
+        catch (DatabaseActionException e) {
+            throw new ServiceException("Failed to fetch passenger with surname: " + surname + " due to some database problem", e);
+        }
+    }
+
 
     public void updateExistingPassenger(int passengerId, String name, String surname, String email, String phoneNumber) {
         validateData(email, phoneNumber);

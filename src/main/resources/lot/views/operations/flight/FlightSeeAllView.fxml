@@ -23,9 +23,9 @@
             <TableColumn fx:id="seatRowsAmountColumn" prefWidth="100" text="Seat Rows" />
             <TableColumn fx:id="twoWayColumn" text="Two Way" />
         </columns>
-      <columnResizePolicy>
-         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-      </columnResizePolicy>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
     </TableView>
     <Button fx:id="backButton" layoutX="31.0" layoutY="445.0" mnemonicParsing="false" onAction="#goBack" text="Go back" />
 </AnchorPane>

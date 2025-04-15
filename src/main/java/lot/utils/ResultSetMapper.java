@@ -40,7 +40,10 @@ public class ResultSetMapper {
                 rs.getInt("id"),
                 rs.getInt("flightId"),
                 rs.getInt("passengerId"),
-                rs.getString("seatNumber")
+                rs.getString("name"),
+                rs.getString("surname"),
+                rs.getString("seatNumber"),
+                rs.getObject("departureDate", LocalDateTime.class)
         );
     }
 

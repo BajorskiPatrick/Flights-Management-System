@@ -18,11 +18,11 @@
             <TableColumn fx:id="idColumn" prefWidth="50" text="ID" />
             <TableColumn fx:id="nameColumn" prefWidth="100" text="Name" />
             <TableColumn fx:id="surnameColumn" prefWidth="100" text="Surname" />
-            <TableColumn fx:id="emailColumn" prefWidth="150" text="Email" />
+            <TableColumn fx:id="emailColumn" prefWidth="200" text="Email" />
             <TableColumn fx:id="phoneNumberColumn" prefWidth="100" text="Phone number" />
         </columns>
         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
         </columnResizePolicy>
     </TableView>
     <Button fx:id="backButton" layoutX="31.0" layoutY="445.0" mnemonicParsing="false" onAction="#goBack" text="Go back" />

@@ -18,12 +18,12 @@
             <TableColumn fx:id="idColumn" prefWidth="50" text="ID" />
             <TableColumn fx:id="flightIdColumn" prefWidth="100" text="Flight ID" />
             <TableColumn fx:id="passengerIdColumn" prefWidth="100" text="Passenger ID" />
+            <TableColumn fx:id="passengerNameColumn" prefWidth="150" text="Passenger's name" />
+            <TableColumn fx:id="passengerSurnameColumn" prefWidth="150" text="Passenger's surname" />
             <TableColumn fx:id="seatNumberColumn" prefWidth="150" text="Seat number" />
+            <TableColumn fx:id="departureDateColumn" prefWidth="150" text="Departure date" />
             <TableColumn fx:id="tookPlaceColumn" prefWidth="100" text="Took place" />
         </columns>
-        <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-        </columnResizePolicy>
     </TableView>
     <Button fx:id="backButton" layoutX="31.0" layoutY="445.0" mnemonicParsing="false" onAction="#goBack" text="Go back" />
 </AnchorPane>

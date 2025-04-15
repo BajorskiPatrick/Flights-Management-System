@@ -35,6 +35,33 @@ public class PassengerDao implements GenericDao<Passenger> {
         }
     }
 
+    public List<Passenger> findBySurname(String surname) throws DatabaseActionException {
+        String query =
+                """
+                SELECT *
+                FROM passengers p
+                WHERE p.surname = ?
+                """;
+
+        try (
+                Connection conn = DatabaseInitializer.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query)
+        ) {
+            ps.setString(1, surname);
+            ResultSet rs = ps.executeQuery();
+            List<Passenger> passengers = new ArrayList<>();
+            while (rs.next()) {
+                Passenger passenger = ResultSetMapper.mapPassenger(rs);
+                passengers.add(passenger);
+            }
+            rs.close();
+            return passengers;
+        }
+        catch (SQLException e) {
+            throw new DatabaseActionException("Database error while fetching passenger details", e);
+        }
+    }
+
 
     @Override
     public List<Passenger> findAll() throws DatabaseActionException {

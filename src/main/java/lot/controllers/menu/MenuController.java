@@ -39,13 +39,11 @@ public class MenuController {
     private Stage stage;
     private Scene scene;
     private Parent root;
+    private String resourceType;
 
     private final FlightService flightService = new FlightService(new FlightDao());
     private final ReservationService reservationService = new ReservationService(new ReservationDao(), new FlightDao(), new PassengerDao(), new EmailService());
     private final PassengerService passengerService = new PassengerService(new PassengerDao());
-
-
-    private String resourceType;
 
     public void setResourceType(String resourceType) {
         this.resourceType = resourceType;
@@ -57,41 +55,47 @@ public class MenuController {
         deleteButton.setText("Delete "+ resourceType);
     }
 
-    public void seeAllOperation(ActionEvent event) throws IOException {
+    @FXML
+    private void seeAllOperation(ActionEvent event) throws IOException {
         FXMLLoader loader = this.getLoader("SeeAllView");
         root = loader.load();
 
         switch(resourceType) {
             case "flight":
                 FlightOperationsController flightController = loader.getController();
-                flightController.configureTableColumns();
-                flightController.loadFlights();
+                flightController.seeAllFlights();
                 break;
             case "passenger":
                 PassengerOperationsController passengerController = loader.getController();
-                passengerController.configureTableColumns();
-                passengerController.loadPassengers();
+                passengerController.seeAllPassengers();
                 break;
             case "reservation":
                 ReservationOperationsController reservationController = loader.getController();
-                reservationController.configureTableColumns();
-                reservationController.loadReservations();
+                reservationController.seeAllReservations();
                 break;
         }
 
         stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/lot/css/SeeAllView.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/lot/css/SearchView.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
 
     }
 
-    public void searchOperation(ActionEvent event) {
-
+    @FXML
+    private void searchOperation(ActionEvent event) throws IOException {
+        FXMLLoader loader = this.getLoader("SearchView");
+        root = loader.load();
+        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/lot/css/SearchView.css").toExternalForm());
+        stage.setScene(scene);
+        stage.show();
     }
 
-    public void addNewOperation(ActionEvent event) throws IOException {
+    @FXML
+    private void addNewOperation(ActionEvent event) throws IOException {
         FXMLLoader loader = this.getLoader("AddView");
         root = loader.load();
 
@@ -102,12 +106,13 @@ public class MenuController {
 
         stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/lot/css/AddView.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/lot/css/AddUpdateView.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
 
-    public void updateOperation(ActionEvent event) throws IOException {
+    @FXML
+    private void updateOperation(ActionEvent event) throws IOException {
         FXMLLoader loader = this.getLoader("UpdateView");
         root = loader.load();
 
@@ -128,12 +133,13 @@ public class MenuController {
 
         stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/lot/css/AddView.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/lot/css/AddUpdateView.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
 
-    public void deleteOperation(ActionEvent event) throws IOException {
+    @FXML
+    private void deleteOperation(ActionEvent event) throws IOException {
         FXMLLoader loader = this.getLoader("DeleteView");
         root = loader.load();
 
@@ -159,7 +165,8 @@ public class MenuController {
         stage.show();
     }
 
-    public void goBack(ActionEvent event) throws IOException {
+    @FXML
+    private void goBack(ActionEvent event) throws IOException {
         loadView("/lot/views/MainApp.fxml", event);
     }
 

@@ -13,7 +13,7 @@
     <TextField fx:id="destinationField" layoutX="275.0" layoutY="140.0" prefWidth="250" promptText="Destination" />
     <DatePicker fx:id="departureDateField" editable="false" layoutX="275.0" layoutY="190.0" prefWidth="250" promptText="Departure date" />
     <TextField fx:id="timeField" layoutX="275.0" layoutY="240.0" prefWidth="250" promptText="Departure hour in HH:mm format" />
-    <TextField fx:id="durationField" layoutX="275.0" layoutY="290.0" prefWidth="250" promptText="Flight duration" />
+    <TextField fx:id="durationField" layoutX="275.0" layoutY="290.0" prefWidth="250" promptText="Flight duration in minutes" />
     <TextField fx:id="seatRowsAmountField" layoutX="275.0" layoutY="340.0" prefWidth="250" promptText="Seat rows amount" />
     <CheckBox fx:id="twoWayField" layoutX="351.0" layoutY="390.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="150.0" text="Is two way?" />
     <Button fx:id="addButton" layoutX="350.0" layoutY="440.0" onAction="#addNewFlight" prefWidth="100" text="Add" />

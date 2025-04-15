@@ -13,7 +13,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import lot.controllers.menu.MenuController;
-import lot.exceptions.services.EmailException;
 import lot.exceptions.services.NotFoundException;
 import lot.exceptions.services.ServiceException;
 import lot.exceptions.services.ValidationException;
@@ -27,81 +26,77 @@ import java.util.stream.Collectors;
 
 public class PassengerOperationsController {
     @FXML
-    private TableView<Passenger> passengerTable;
+    public ComboBox<Integer> idSearchField;
+    @FXML
+    public TextField surnameSearchField;
 
+    @FXML
+    private TableView<Passenger> passengerTable;
     @FXML
     private TableColumn<Passenger, Integer> idColumn;
-
     @FXML
     private TableColumn<Passenger, String> nameColumn;
-
     @FXML
     private TableColumn<Passenger, String> surnameColumn;
-
     @FXML
     private TableColumn<Passenger, String> emailColumn;
-
     @FXML
     private TableColumn<Passenger, String> phoneNumberColumn;
 
     @FXML
     private ComboBox<Integer> deleteId;
-
     @FXML
     private Label choiceLabel;
-
-    @FXML
-    private TextField nameField;
-
-    @FXML
-    private TextField surnameField;
-
-    @FXML
-    private TextField emailField;
-
-    @FXML
-    private TextField phoneNumberField;
-
-    @FXML
-    private Label addLabel;
-
-    @FXML
-    private AnchorPane addPane;
-
     @FXML
     private AnchorPane deletionPane;
 
     @FXML
-    private AnchorPane updatePane;
+    private TextField nameField;
+    @FXML
+    private TextField surnameField;
+    @FXML
+    private TextField emailField;
+    @FXML
+    private TextField phoneNumberField;
+    @FXML
+    private Label addLabel;
+    @FXML
+    private AnchorPane addPane;
 
+    @FXML
+    private AnchorPane updatePane;
     @FXML
     private TextField updateNameField;
-
     @FXML
     private TextField updateSurnameField;
-
     @FXML
     private TextField updateEmailField;
-
     @FXML
     private TextField updatePhoneNumberField;
-
     @FXML
     private Label updateLabel;
-
     @FXML
     private ComboBox<Integer> idToUpdateSelectorBox;
 
     private ObservableList<Integer> ids = FXCollections.observableArrayList();
-
     private Stage stage;
     private Scene scene;
     private Parent root;
-
     private final PassengerService passengerService;
 
     public PassengerOperationsController(PassengerService passengerService) {
         this.passengerService = passengerService;
+    }
+
+    @FXML
+    public void initialize() {
+        if (passengerTable != null) {
+            idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+            nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+            surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
+            emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+            phoneNumberColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
+        }
     }
 
     public void configurePassengersIds(String type) {
@@ -118,16 +113,7 @@ public class PassengerOperationsController {
         }
     }
 
-
-    public void configureTableColumns() {
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
-        emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
-        phoneNumberColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
-    }
-
-    public void loadPassengers() {
+    public void seeAllPassengers() {
         try {
             List<Passenger> passengers = passengerService.getAllPassengers();
             ObservableList<Passenger> flightObservableList = FXCollections.observableArrayList(passengers);
@@ -137,26 +123,52 @@ public class PassengerOperationsController {
         }
     }
 
-    public void goBack(ActionEvent event) throws IOException {
-        loadView("/lot/views/menu/MenuView.fxml", event);
-    }
+    @FXML
+    private void changeVisibility(ActionEvent event) {
+        Button button = (Button) event.getSource();
+        String id = button.getId();
+        switch (id) {
+            case "buttonIdSearch":
+                surnameSearchField.clear();
 
-    private void loadView(String viewPath, ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));
-        root = loader.load();
-        MenuController controller = loader.getController();
-        controller.setResourceType("passenger");
-        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/lot/css/Menu.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
+                surnameSearchField.setVisible(false);
+                idSearchField.setVisible(true);
+                ids.clear();
+                ids.addAll(passengerService.getIds().stream().sorted().collect(Collectors.toList()));
+                idSearchField.setItems(ids);
+                idSearchField.setVisibleRowCount(5);
+                idSearchField.setPromptText("Select ID");
+                break;
+            case "buttonSurnameSearch":
+                surnameSearchField.setVisible(true);
+                idSearchField.setVisible(false);
+                break;
+        }
     }
 
     @FXML
-    private void changeDeletionLabel(ActionEvent event) {
-        Integer choice = deleteId.getValue();
-        choiceLabel.setText("You choose id: " + choice);
+    private void performSearchByCriteria(ActionEvent event) {
+        try {
+            if (idSearchField.isVisible()) {
+                Integer id = idSearchField.getValue();
+                if (id == null) {
+                    return;
+                }
+                Passenger passenger = passengerService.getPassengerById(id);
+                passengerTable.setItems(FXCollections.observableArrayList(passenger));
+            }
+            else if (surnameSearchField.isVisible()) {
+                String surname = surnameSearchField.getText();
+                if (surname.isEmpty()) {
+                    return;
+                }
+                List<Passenger> passengers = passengerService.getPassengerBySurname(surname);
+                passengerTable.setItems(FXCollections.observableArrayList(passengers));
+            }
+        }
+        catch (ServiceException e) {
+            showApplicationErrorMessage(e.getMessage());
+        }
     }
 
     @FXML
@@ -166,7 +178,6 @@ public class PassengerOperationsController {
             choiceLabel.setText("You choose no id!");
             return;
         }
-
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Deletion");
@@ -208,7 +219,8 @@ public class PassengerOperationsController {
         }
         catch (ValidationException e) {
             showDataErrorMessage(e.getMessage());
-            clearForm(addPane, "Type new passenger data");
+            addLabel.setText("Type new passenger data");
+            addLabel.setTextFill(Color.BLACK);
             return;
         }
         catch (ServiceException e) {
@@ -242,6 +254,12 @@ public class PassengerOperationsController {
         try {
             passengerService.updateExistingPassenger(id, name, surname, email, phoneNumber);
         }
+        catch (ValidationException e) {
+            showDataErrorMessage(e.getMessage());
+            updateLabel.setText("Provide updated data (first, on the left, select which to update)");
+            updateLabel.setTextFill(Color.BLACK);
+            return;
+        }
         catch (ServiceException e) {
             showApplicationErrorMessage(e.getMessage());
             clearForm(updatePane, "Provide updated data (first, on the left, select which to update)");
@@ -253,6 +271,29 @@ public class PassengerOperationsController {
         alert.showAndWait();
 
         clearForm(updatePane, "Provide updated data (first, on the left, select which to update)");
+    }
+
+    @FXML
+    private void changeDeletionLabel(ActionEvent event) {
+        Integer choice = deleteId.getValue();
+        choiceLabel.setText("You choose id: " + choice);
+    }
+
+    @FXML
+    private void goBack(ActionEvent event) throws IOException {
+        loadView("/lot/views/menu/MenuView.fxml", event);
+    }
+
+    private void loadView(String viewPath, ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));
+        root = loader.load();
+        MenuController controller = loader.getController();
+        controller.setResourceType("passenger");
+        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/lot/css/Menu.css").toExternalForm());
+        stage.setScene(scene);
+        stage.show();
     }
 
     private void loadSelectedPassengerDetails(ActionEvent event) {

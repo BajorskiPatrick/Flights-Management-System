@@ -3,13 +3,12 @@ package lot.dao;
 import lot.database.DatabaseInitializer;
 import lot.exceptions.dao.DatabaseActionException;
 import lot.models.Flight;
-import lot.models.Seat;
 import lot.utils.ResultSetMapper;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.OptionalInt;
 
 public class FlightDao implements GenericDao<Flight> {
     @Override
@@ -33,7 +32,88 @@ public class FlightDao implements GenericDao<Flight> {
             return flight;
         }
         catch (SQLException e) {
-            throw new DatabaseActionException("Database error while fetching flight details", e);
+            throw new DatabaseActionException("Database error while fetching flight details by id", e);
+        }
+    }
+
+    public List<Flight> findByDeparture(String departure) throws DatabaseActionException {
+        String query =
+                """
+                SELECT *
+                FROM flights f
+                WHERE departure = ?
+                """;
+
+        try (
+                Connection conn = DatabaseInitializer.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query)
+        ) {
+            ps.setString(1, departure);
+            ResultSet rs = ps.executeQuery();
+            List<Flight> flights = new ArrayList<>();
+            while (rs.next()) {
+                Flight flight = ResultSetMapper.mapFlight(rs);
+                flights.add(flight);
+            }
+            rs.close();
+            return flights;
+        }
+        catch (SQLException e) {
+            throw new DatabaseActionException("Database error while fetching flight details by departure", e);
+        }
+    }
+
+    public List<Flight> findByDestination(String destination) throws DatabaseActionException {
+        String query =
+                """
+                SELECT *
+                FROM flights f
+                WHERE destination = ?
+                """;
+
+        try (
+                Connection conn = DatabaseInitializer.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query)
+        ) {
+            ps.setString(1, destination);
+            ResultSet rs = ps.executeQuery();
+            List<Flight> flights = new ArrayList<>();
+            while (rs.next()) {
+                Flight flight = ResultSetMapper.mapFlight(rs);
+                flights.add(flight);
+            }
+            rs.close();
+            return flights;
+        }
+        catch (SQLException e) {
+            throw new DatabaseActionException("Database error while fetching flight details by destination", e);
+        }
+    }
+
+    public List<Flight> findByDate(LocalDate date) throws DatabaseActionException {
+        String query =
+                """
+                SELECT *
+                FROM flights f
+                WHERE CAST(departureDate AS DATE) = ?
+                """;
+
+        try (
+                Connection conn = DatabaseInitializer.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query)
+        ) {
+            ps.setDate(1, Date.valueOf(date));
+            ResultSet rs = ps.executeQuery();
+            List<Flight> flights = new ArrayList<>();
+            while (rs.next()) {
+                Flight flight = ResultSetMapper.mapFlight(rs);
+                flights.add(flight);
+            }
+            rs.close();
+            return flights;
+        }
+        catch (SQLException e) {
+            throw new DatabaseActionException("Database error while fetching flight details by destination", e);
         }
     }
 

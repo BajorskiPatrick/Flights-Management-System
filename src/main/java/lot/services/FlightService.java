@@ -50,13 +50,40 @@ public class FlightService {
 
     public Flight getFlightById(int flightId) {
         try {
-            if (!flightDao.existsById(flightId)) {
-                throw new NotFoundException("Flight with id: " + flightId + " can not be fetched, because it does not exists in the database");
-            }
+//            if (!flightDao.existsById(flightId)) {
+//                throw new NotFoundException("Flight with id: " + flightId + " can not be fetched, because it does not exists in the database");
+//            }
             return flightDao.findById(flightId);
         }
         catch (DatabaseActionException e) {
             throw new ServiceException("Failed to fetch flight with id: " + flightId + " due to some database problem", e);
+        }
+    }
+
+    public List<Flight> getFlightByDeparture(String departure) {
+        try {
+            return flightDao.findByDeparture(departure);
+        }
+        catch (DatabaseActionException e) {
+            throw new ServiceException("Failed to fetch flights with departure: " + departure + " due to some database problem", e);
+        }
+    }
+
+    public List<Flight> getFlightByDestination(String destination) {
+        try {
+            return flightDao.findByDestination(destination);
+        }
+        catch (DatabaseActionException e) {
+            throw new ServiceException("Failed to fetch flights with destination: " + destination + " due to some database problem", e);
+        }
+    }
+
+    public List<Flight> getFlightByDate(LocalDate date) {
+        try {
+            return flightDao.findByDate(date);
+        }
+        catch (DatabaseActionException e) {
+            throw new ServiceException("Failed to fetch flights with date: " + date + " due to some database problem", e);
         }
     }
 

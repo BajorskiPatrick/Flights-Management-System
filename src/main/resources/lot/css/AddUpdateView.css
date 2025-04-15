@@ -17,7 +17,7 @@
 }
 
 /* Pola tekstowe */
-#departureField, #destinationField, #timeField, #durationField, #seatRowsAmountField, #nameField, #surnameField, #emailField, #phoneNumberField, #flightIdField, #passengerIdField, #seatNumberField {
+.text-field {
     -fx-background-color: white;
     -fx-border-color: #4682B4;
     -fx-border-radius: 10px;
@@ -43,16 +43,8 @@
     -fx-effect: dropshadow(gaussian, rgba(30,144,255,0.3), 5, 0, 0, 1);
 }
 
-.text-field {
-    -fx-background-color: white;
-    -fx-border-color: #4682B4;
+.date-picker .text-field {
     -fx-border-radius: 0px;
-    -fx-background-radius: 12px;
-    -fx-border-width: 3px;
-    -fx-font-size: 14px;
-    -fx-padding: 5px 10px;
-    -fx-pref-height: 35px;
-    -fx-effect: dropshadow(gaussian, rgba(30,144,255,0.3), 5, 0, 0, 1);
 }
 
 .text-field:focused {

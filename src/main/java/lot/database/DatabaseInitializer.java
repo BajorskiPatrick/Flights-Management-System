@@ -11,7 +11,7 @@ public class DatabaseInitializer {
     private static final HikariDataSource dataSource;
 
     static {
-        String dbUrl = "jdbc:h2:./lotdb;MODE=POSTGRESQL;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1";
+        String dbUrl = "jdbc:h2:./lotdb;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1";
         String dbUser = "sa";
         String dbPass = "";
 
