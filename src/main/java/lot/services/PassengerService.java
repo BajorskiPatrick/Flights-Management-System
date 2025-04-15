@@ -41,6 +41,15 @@ public class PassengerService {
         }
     }
 
+    public List<Integer> getIds() {
+        try {
+            return passengerDao.findAllId();
+        }
+        catch (DatabaseActionException e) {
+            throw new ServiceException("Failed to fetch all passengers ids due to some database problem", e);
+        }
+    }
+
 
     public Passenger getPassengerById(int id) {
         try {

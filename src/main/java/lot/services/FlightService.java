@@ -7,7 +7,10 @@ import lot.exceptions.services.ServiceException;
 import lot.exceptions.services.ValidationException;
 import lot.models.Flight;
 
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -19,9 +22,10 @@ public class FlightService {
         this.flightDao = flightDao;
     }
 
-    public int addNewFlight(String departure, String destination, String departureDate, int duration, int seatRowsAmount, Boolean twoWay) {
-        validateData(departureDate, duration, seatRowsAmount);
-        LocalDateTime dd = LocalDateTime.parse(departureDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+    public int addNewFlight(String departure, String destination, LocalDate departureDate, String time, int duration, int seatRowsAmount, Boolean twoWay) {
+        validateData(departureDate, time, duration, seatRowsAmount);
+        LocalTime t = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
+        LocalDateTime dd = departureDate.atTime(t);
         Flight flight = new Flight(departure, destination, dd, duration, seatRowsAmount, twoWay);
 
         try {
@@ -56,6 +60,15 @@ public class FlightService {
         }
     }
 
+    public List<Integer> getIds() {
+        try {
+            return flightDao.findAllId();
+        }
+        catch (DatabaseActionException e) {
+            throw new ServiceException("Failed to fetch all flights ids due to some database problem", e);
+        }
+    }
+
     public List<String> getAvailableSeats(int flightId) {
         try {
             return flightDao.getAvailableSeatsNumbers(flightId);
@@ -66,7 +79,7 @@ public class FlightService {
     }
 
 
-    public void updateExistingFlight(int flightId, String departure, String destination, String departureDate, int duration, int seatRowsAmount, Boolean twoWay) {
+    public void updateExistingFlight(int flightId, String departure, String destination, LocalDate departureDate, String time, int duration, int seatRowsAmount, Boolean twoWay) {
         Flight flight;
         try {
             flight = getFlightById(flightId);
@@ -75,8 +88,9 @@ public class FlightService {
             throw new NotFoundException("Flight with id: " + flightId + " can not be updated, because it does not exists in the database");
         }
 
-        validateData(departureDate, duration, seatRowsAmount);
-        LocalDateTime dd = LocalDateTime.parse(departureDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        validateData(departureDate, time, duration, seatRowsAmount);
+        LocalTime t = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
+        LocalDateTime dd = departureDate.atTime(t);
 
         if (seatRowsAmount < flight.getSeatRowsAmount()) {
             throw new ValidationException("New seat rows amount must be greater or equal to previous seat rows amount");
@@ -111,17 +125,19 @@ public class FlightService {
     }
 
 
-    private void validateData(String departureDate, int duration, int seatRowsAmount) {
-        LocalDateTime dd;
+    private void validateData(LocalDate date, String time, int duration, int seatRowsAmount) {
+        LocalTime t;
         try {
-            dd = LocalDateTime.parse(departureDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+            t = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
         }
         catch (DateTimeParseException e) {
-            throw new ValidationException("Provided date is in wrong format! Required date in format: yyyy-MM-dd HH:mm");
+            throw new ValidationException("Provided time is in wrong format! Required time in format: HH:mm");
         }
 
-        if (dd.isBefore(LocalDateTime.now())) {
-            throw new ValidationException("Flight's date must be in the future?");
+        LocalDateTime dt = date.atTime(t);
+
+        if (dt.isBefore(LocalDateTime.now())) {
+            throw new ValidationException("Flight's date must be in the future!");
         }
         if (duration <= 0) {
             throw new ValidationException("Flight's duration must be greater than 0!");

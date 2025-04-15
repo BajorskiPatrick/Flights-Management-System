@@ -162,5 +162,30 @@ public class PassengerDao implements GenericDao<Passenger> {
             throw new DatabaseActionException("Database error while checking if passenger exists", e);
         }
     }
+
+    public List<Integer> findAllId() throws DatabaseActionException {
+        List<Integer> ids = new ArrayList<>();
+
+        String query =
+                """
+                SELECT id
+                FROM passengers
+                """;
+
+        try (
+                Connection conn = DatabaseInitializer.getConnection();
+                Statement statement = conn.createStatement()
+        ) {
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                ids.add(rs.getInt(1));
+            }
+            rs.close();
+            return ids;
+        }
+        catch (SQLException e) {
+            throw new DatabaseActionException("Database error while fetching all flights details", e);
+        }
+    }
 }
 

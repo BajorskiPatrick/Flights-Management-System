@@ -29,11 +29,10 @@ public class ReservationService {
 
 
     public int makeNewReservation(int flightId, int passengerId, String seatNumber) {
-        validateData(flightId, passengerId, seatNumber, null);
+//        validateData(flightId, passengerId, seatNumber, null);
         try {
             Reservation reservation = new Reservation(flightId, passengerId, seatNumber);
             int id = reservationDao.save(reservation);
-            this.sendEmail(reservation);
             return id;
 
         } catch (DatabaseActionException e) {
@@ -48,6 +47,33 @@ public class ReservationService {
         }
         catch (DatabaseActionException e) {
             throw new ServiceException("Failed to fetch all reservations due to some database problem", e);
+        }
+    }
+
+    public List<Integer> getIds() {
+        try {
+            return reservationDao.findAllId();
+        }
+        catch (DatabaseActionException e) {
+            throw new ServiceException("Failed to fetch all reservations ids due to some database problem", e);
+        }
+    }
+
+    public List<Integer> getFlightIds() {
+        try {
+            return flightDao.findAllId();
+        }
+        catch (DatabaseActionException e) {
+            throw new ServiceException("Failed to fetch all flights ids due to some database problem", e);
+        }
+    }
+
+    public List<Integer> getPassengerIds() {
+        try {
+            return passengerDao.findAllId();
+        }
+        catch (DatabaseActionException e) {
+            throw new ServiceException("Failed to fetch all passengers ids due to some database problem", e);
         }
     }
 
@@ -103,7 +129,7 @@ public class ReservationService {
             if (!reservationDao.existsById(reservationId)) {
                 throw new NotFoundException("Reservation with id: " + reservationId + " can not be updated, because it does not exists in the database");
             }
-            validateData(flightId, passengerId, seatNumber, reservationId);
+//            validateData(flightId, passengerId, seatNumber, reservationId);
             Reservation reservation = new Reservation(reservationId, flightId, passengerId, seatNumber);
             reservationDao.update(reservation);
         }
@@ -125,37 +151,50 @@ public class ReservationService {
         }
     }
 
-
-    public void validateData(int flightId, int passengerId, String seatNumber, Integer reservationId) {
+    public List<String> getAvailableSeats(int flightId) {
         try {
-            if (!flightDao.existsById(flightId)) {
-                throw new ValidationException("Flight assigned to the reservation must exists!");
-            }
-            if (!passengerDao.existsById(passengerId)) {
-                throw new ValidationException("Passenger assigned to the reservation must exists!");
-            }
-            if (reservationId != null) {
-                if (!reservationDao.findById(reservationId).getSeatNumber().equals(seatNumber) && !flightDao.getAvailableSeatsNumbers(flightId).contains(seatNumber)) {
-                    throw new ValidationException("Provided seat number is not available or it does not exist");
-                }
-            }
-            else {
-                if (!flightDao.getAvailableSeatsNumbers(flightId).contains(seatNumber)) {
-                    throw new ValidationException("Provided seat number is not available or it does not exist");
-                }
-            }
+            return flightDao.getAvailableSeatsNumbers(flightId);
         }
         catch (DatabaseActionException e) {
-            throw new ServiceException("Failed to validate data while creating or updating reservation due to some database problem", e);
+            throw new ServiceException("Failed to fetch available seats numbers for selected flight with id: " + flightId + " due to some database problem", e);
         }
     }
 
-    private void sendEmail(Reservation reservation) {
+
+//    public void validateData(int flightId, int passengerId, String seatNumber, Integer reservationId) {
+//        try {
+//            if (!flightDao.existsById(flightId)) {
+//                throw new ValidationException("Flight assigned to the reservation must exists!");
+//            }
+//            if (!passengerDao.existsById(passengerId)) {
+//                throw new ValidationException("Passenger assigned to the reservation must exists!");
+//            }
+//            if (reservationId != null) {
+//                if (!reservationDao.findById(reservationId).getSeatNumber().equals(seatNumber) && !flightDao.getAvailableSeatsNumbers(flightId).contains(seatNumber)) {
+//                    throw new ValidationException("Provided seat number is not available or it does not exist");
+//                }
+//            }
+//            else {
+//                if (!flightDao.getAvailableSeatsNumbers(flightId).contains(seatNumber)) {
+//                    throw new ValidationException("Provided seat number is not available or it does not exist");
+//                }
+//            }
+//        }
+//        catch (DatabaseActionException e) {
+//            throw new ServiceException("Failed to validate data while creating or updating reservation due to some database problem", e);
+//        }
+//    }
+
+    public void sendEmail(int reservationId) {
         try {
+            Reservation reservation = reservationDao.findById(reservationId);
             emailService.sendConfirmationEmail(passengerDao.findById(reservation.getPassengerId()).getEmail(), reservation.toString());
         }
         catch (DatabaseActionException e) {
             throw new EmailException("Failed to collect data required to send email due to some database problem", e);
+        }
+        catch (NotFoundException e) {
+            throw new EmailException("Failed to send email about reservation with id: " + reservationId + ", because it was not found ", e);
         }
     }
 }

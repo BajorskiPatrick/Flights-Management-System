@@ -1,0 +1,187 @@
+#addPane, #updatePane {
+    -fx-min-width: 800px;
+    -fx-max-width: 800px;
+    -fx-min-height: 500px;
+    -fx-max-height: 500px;
+    -fx-background-color: linear-gradient(to bottom, #87CEEB, #1E90FF);
+    -fx-padding: 20px;
+}
+
+/* Etykieta tytułowa */
+.label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2F4F4F;
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 0, 0, 0, 1);
+    -fx-alignment: CENTER;
+}
+
+/* Pola tekstowe */
+#departureField, #destinationField, #timeField, #durationField, #seatRowsAmountField, #nameField, #surnameField, #emailField, #phoneNumberField, #flightIdField, #passengerIdField, #seatNumberField {
+    -fx-background-color: white;
+    -fx-border-color: #4682B4;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 12px;
+    -fx-border-width: 3px;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 10px;
+    -fx-pref-height: 35px;
+    -fx-effect: dropshadow(gaussian, rgba(30,144,255,0.3), 5, 0, 0, 1);
+}
+
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #4682B4;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 12px;
+    -fx-border-width: 3px;
+    -fx-font-size: 14px;
+    -fx-padding: 0px 10px;
+    -fx-pref-height: 35px;
+    -fx-max-height: 35px;
+    -fx-min-height: 35px;
+    -fx-effect: dropshadow(gaussian, rgba(30,144,255,0.3), 5, 0, 0, 1);
+}
+
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #4682B4;
+    -fx-border-radius: 0px;
+    -fx-background-radius: 12px;
+    -fx-border-width: 3px;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 10px;
+    -fx-pref-height: 35px;
+    -fx-effect: dropshadow(gaussian, rgba(30,144,255,0.3), 5, 0, 0, 1);
+}
+
+.text-field:focused {
+    -fx-border-color: #1E90FF;
+}
+
+/* Przycisk */
+.button, #addButton {
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-border-width: 2px;
+    -fx-border-color: #2F4F4F;
+    -fx-background-color: #4682B4;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-pref-height: 40px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1);
+}
+
+.button:hover, #addButton:hover {
+    -fx-background-color: #5F9EA0;
+    -fx-border-color: #008B8B;
+    -fx-cursor: hand;
+}
+
+.button:pressed, #addButton:pressed {
+    -fx-background-color: #2F4F4F;
+}
+
+#addButton {
+    -fx-min-width: 100px;
+    -fx-max-width: 100px;
+}
+
+#backButton {
+    -fx-pref-width: 150px;
+    -fx-pref-height: 40px;
+    -fx-min-width: 150px;
+    -fx-min-height: 40px;
+    -fx-max-width: 150px;
+    -fx-max-height: 40px;
+}
+
+/* Checkbox */
+.check-box {
+    -fx-font-size: 14px;
+    -fx-text-fill: black; /* Tekst na czarno */
+    -fx-font-weight: bold; /* Pogrubienie tekstu */
+    -fx-padding: 5px 0;
+}
+
+.check-box .box {
+    -fx-background-color: white;
+    -fx-border-color: #4682B4;
+    -fx-border-radius: 0px; /* Brak zaokrąglenia krawędzi */
+    -fx-background-radius: 0px; /* Brak zaokrąglenia krawędzi */
+    -fx-border-width: 3px;
+    -fx-pref-width: 20px;
+    -fx-pref-height: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(30,144,255,0.3), 5, 0, 0, 1);
+}
+
+.check-box:hover .box {
+    -fx-border-color: #5F9EA0;
+}
+
+.check-box:focused .box {
+    -fx-border-color: #1E90FF;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: #4682B4;
+}
+
+.check-box:pressed .box {
+    -fx-background-color: #E6F2FF;
+}
+
+.check-box:disabled {
+    -fx-opacity: 0.7;
+}
+
+.check-box .text {
+    -fx-fill: white; /* Tekst czarny */
+    -fx-font-weight: bold; /* Pogrubienie tekstu */
+}
+
+
+
+
+.combo-box .arrow {
+    -fx-background-color: white;
+}
+
+.combo-box .text-input {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #2980b9;
+    -fx-background-radius: 10px;
+    -fx-border-color: #3498db;
+    -fx-border-radius: 10px;
+    -fx-border-width: 2px;
+}
+
+.combo-box-popup .list-cell {
+    -fx-background-color: #2980b9;
+    -fx-text-fill: white;
+    -fx-padding: 5px 10px;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #3498db;
+}
+
+.combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: #1E90FF;
+}
+
+.combo-box .prompt-text {
+    -fx-text-fill: rgba(255,255,255,0.7);
+    -fx-font-style: italic;
+}
+
+.combo-box:hover {
+    -fx-background-color: #3498db;
+    -fx-border-color: #2980b9;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);
+}

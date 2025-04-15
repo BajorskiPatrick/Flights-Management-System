@@ -223,6 +223,31 @@ public class FlightDao implements GenericDao<Flight> {
         }
     }
 
+    public List<Integer> findAllId() throws DatabaseActionException {
+        List<Integer> ids = new ArrayList<>();
+
+        String query =
+                """
+                SELECT id
+                FROM flights
+                """;
+
+        try (
+                Connection conn = DatabaseInitializer.getConnection();
+                Statement statement = conn.createStatement()
+        ) {
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                ids.add(rs.getInt(1));
+            }
+            rs.close();
+            return ids;
+        }
+        catch (SQLException e) {
+            throw new DatabaseActionException("Database error while fetching all flights details", e);
+        }
+    }
+
 
     private void createSeats(Connection conn, int flightId, int initialNumber, int seatRowsAmount) throws DatabaseActionException {
         String query =

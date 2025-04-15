@@ -215,4 +215,29 @@ public class ReservationDao implements GenericDao<Reservation> {
             throw new DatabaseActionException("Database error while checking if flight assigned to reservation has already taken place", e);
         }
     }
+
+    public List<Integer> findAllId() throws DatabaseActionException {
+        List<Integer> ids = new ArrayList<>();
+
+        String query =
+                """
+                SELECT id
+                FROM reservations
+                """;
+
+        try (
+                Connection conn = DatabaseInitializer.getConnection();
+                Statement statement = conn.createStatement()
+        ) {
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                ids.add(rs.getInt(1));
+            }
+            rs.close();
+            return ids;
+        }
+        catch (SQLException e) {
+            throw new DatabaseActionException("Database error while fetching all flights details", e);
+        }
+    }
 }

@@ -1,56 +1,140 @@
 package lot;
 
-import lot.dao.FlightDao;
-import lot.dao.PassengerDao;
-import lot.dao.ReservationDao;
+
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 import lot.database.DatabaseInitializer;
-import lot.exceptions.dao.DatabaseActionException;
-import lot.exceptions.services.ServiceException;
-import lot.models.Seat;
-import lot.services.EmailService;
-import lot.services.FlightService;
-import lot.services.PassengerService;
-import lot.services.ReservationService;
-import lot.utils.ResultSetMapper;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.List;
+import java.util.Objects;
 
+public class App extends Application {
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("/lot/views/MainApp.fxml"));
 
-public class App {
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/lot/css/MainApp.css").toExternalForm());
+
+        Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/plane.png")));
+
+        primaryStage.setTitle("Flight Management System");
+        primaryStage.setScene(scene);
+        primaryStage.getIcons().add(icon);
+        primaryStage.setResizable(false);
+
+        primaryStage.show();
+    }
+
     public static void main(String[] args) {
         try {
             DatabaseInitializer.initialize();
         }
         catch (SQLException e) {
             e.printStackTrace();
+            return;
         }
         catch (IOException e) {
             e.printStackTrace();
+            return;
         }
 
-        //(1, 1, '1A'),
+        launch();
+    }
+}
 
-        ReservationService rs = new ReservationService(new ReservationDao(), new FlightDao(), new PassengerDao(), new EmailService());
-        FlightService fs = new FlightService(new FlightDao());
-        PassengerService ps = new PassengerService(new PassengerDao());
-        try {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//import lot.dao.FlightDao;
+//import lot.dao.PassengerDao;
+//import lot.dao.ReservationDao;
+//import lot.database.DatabaseInitializer;
+//import lot.exceptions.dao.DatabaseActionException;
+//import lot.exceptions.services.ServiceException;
+//import lot.models.Seat;
+//import lot.services.EmailService;
+//import lot.services.FlightService;
+//import lot.services.PassengerService;
+//import lot.services.ReservationService;
+//import lot.utils.ResultSetMapper;
+//
+//import java.io.IOException;
+//import java.sql.Connection;
+//import java.sql.ResultSet;
+//import java.sql.SQLException;
+//import java.sql.Statement;
+//import java.util.List;
+//
+//    public static void main(String[] args) {
+//        try {
+//            DatabaseInitializer.initialize();
+//        }
+//        catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        //(1, 1, '1A'),
+//
+//        ReservationService rs = new ReservationService(new ReservationDao(), new FlightDao(), new PassengerDao(), new EmailService());
+//        FlightService fs = new FlightService(new FlightDao());
+//        PassengerService ps = new PassengerService(new PassengerDao());
+//        try {
 //            System.out.println(rs.getReservationsByPassengerId(1));
 //            ps.deletePassenger(1);
 //            System.out.println(rs.getReservationsByPassengerId(1));
-            int passId = ps.addNewPassenger("Patrick", "Bajorski", "bajorski16@gmail.com", "790356300");
-            int resId = rs.makeNewReservation(5, passId, "7F");
-            System.out.println(ps.getPassengerById(passId));
-            System.out.println(rs.getReservationById(resId));
-        }
-        catch (ServiceException e) {
-            e.printStackTrace();
-        }
-
+//            int passId = ps.addNewPassenger("Patrick", "Bajorski", "bajorski16@gmail.com", "790356300");
+//            int resId = rs.makeNewReservation(5, passId, "7F");
+//            System.out.println(ps.getPassengerById(passId));
+//            System.out.println(rs.getReservationById(resId));
+//        }
+//        catch (ServiceException e) {
+//            e.printStackTrace();
+//        }
+//
 //        try {
 //            System.out.println(rs.getReservationById(1));
 //            System.out.println("-------------------------------------");
@@ -75,8 +159,8 @@ public class App {
 //        catch (ServiceException e) {
 //            System.err.println(e.getMessage());
 //        }
-
-
+//
+//
 //        String query1 =
 //                """
 //                SELECT *
@@ -113,10 +197,10 @@ public class App {
 //        catch (SQLException e) {
 //            e.printStackTrace();
 //        }
-
+//
 //        EmailService emailService = new EmailService();
 //        emailService.sendConfirmationEmail("bajorski16@gmail.com", "Testowy email");
-
+//
 //        FlightService fs = new FlightService(new FlightDao());
 //        try {
 //            List<Flight> flights = fs.getAllFlights();
@@ -133,21 +217,21 @@ public class App {
 //            }
 //            System.out.println();
 //
-////            fs.updateExistingFlight(11,"Kraków", "Dallas", "2025-06-15 12:00", 800, 10, true);
-////
-////            List<Flight> flights3 = fs.getAllFlights();
-////            for (Flight flight : flights3) {
-////                System.out.println(flight);
-////            }
-////            System.out.println();
-////
-////            fs.deleteFlight(11);
-////
-////            List<Flight> flights4 = fs.getAllFlights();
-////            for (Flight flight : flights4) {
-////                System.out.println(flight);
-////            }
-////            System.out.println();
+//            fs.updateExistingFlight(11,"Kraków", "Dallas", "2025-06-15 12:00", 800, 10, true);
+//
+//            List<Flight> flights3 = fs.getAllFlights();
+//            for (Flight flight : flights3) {
+//                System.out.println(flight);
+//            }
+//            System.out.println();
+//
+//            fs.deleteFlight(11);
+//
+//            List<Flight> flights4 = fs.getAllFlights();
+//            for (Flight flight : flights4) {
+//                System.out.println(flight);
+//            }
+//            System.out.println();
 //        }
 //        catch (ServiceException e) {
 //            e.printStackTrace();
@@ -158,10 +242,9 @@ public class App {
 //        catch (ValidationException e) {
 //            System.err.println(e.getMessage());
 //        }
-    }
-}
-
-
+//    }
+//
+//
 //        try (Connection conn = DatabaseInitializer.getConnection()) {
 //            Statement stmt = conn.createStatement();
 //            String query = "select * from reservations r where r.passengerId = 1";

@@ -1,0 +1,107 @@
+/* flight_operations.css - Spójny styl z poprzednimi widokami */
+
+/* Główny kontener */
+#myPane {
+    -fx-min-width: 800px;
+    -fx-max-width: 800px;
+    -fx-min-height: 500px;
+    -fx-max-height: 500px;
+    -fx-background-color: linear-gradient(to bottom, #87CEEB, #1E90FF);
+    -fx-padding: 20px;
+}
+
+#titleLabel {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2F4F4F;
+    -fx-font-family: "Arial Rounded MT Bold";
+    -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.5), 0, 0, 0, 1);
+    -fx-padding: 0 0 15px 0;
+}
+
+/* Tabela */
+.table-view {
+    -fx-base: #f0f0f0;
+    -fx-control-inner-background: white;
+    -fx-background-color: white;
+    -fx-table-cell-border-color: transparent;
+    -fx-table-header-border-color: #4682B4;
+    -fx-padding: 5px;
+}
+
+/* Nagłówki kolumn */
+.table-view .column-header-background {
+    -fx-background-color: #4682B4;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-size: 35px;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #2F4F4F;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
+}
+
+/* Wiersze tabeli */
+.table-row-cell:even {
+    -fx-background-color: #F5F5F5;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: white;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #B0E0E6;
+    -fx-text-fill: black;
+}
+
+/* Komórki tabeli */
+.table-cell {
+    -fx-padding: 5px;
+    -fx-alignment: CENTER;
+    -fx-border-width: 0 0 0 0;
+}
+
+#backButton {
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-border-width: 2px;
+    -fx-border-color: #2F4F4F;
+    -fx-background-color: #4682B4;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-pref-width: 150px;
+    -fx-pref-height: 40px;
+    -fx-min-width: 150px;
+    -fx-min-height: 40px;
+    -fx-max-width: 150px;
+    -fx-max-height: 40px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1);
+}
+
+.button:hover {
+    -fx-background-color: #5F9EA0;
+    -fx-border-color: #008B8B;
+    -fx-cursor: hand;
+}
+
+.button:pressed {
+    -fx-background-color: #2F4F4F;
+}
+
+
+/* Dostosowanie dla kolumny Two Way */
+#twoWayColumn {
+    -fx-alignment: CENTER;
+}
+
+AnchorPane {
+    -fx-background-insets: 0;
+    -fx-background-radius: 10px;
+}
