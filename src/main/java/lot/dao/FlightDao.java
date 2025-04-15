@@ -254,7 +254,6 @@ public class FlightDao implements GenericDao<Flight> {
         }
     }
 
-
     @Override
     public Boolean existsById(int id) throws DatabaseActionException {
         String query =
@@ -277,7 +276,6 @@ public class FlightDao implements GenericDao<Flight> {
             throw new DatabaseActionException("Database error while checking if flight exists", e);
         }
     }
-
 
     public List<String> getAvailableSeatsNumbers(int flightId) throws DatabaseActionException {
         String query =
@@ -327,7 +325,6 @@ public class FlightDao implements GenericDao<Flight> {
             throw new DatabaseActionException("Database error while fetching all flights details", e);
         }
     }
-
 
     private void createSeats(Connection conn, int flightId, int initialNumber, int seatRowsAmount) throws DatabaseActionException {
         String query =

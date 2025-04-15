@@ -67,7 +67,6 @@ public class ReservationDao implements GenericDao<Reservation> {
         }
     }
 
-
     public List<Reservation> findAllByForeignKey(String foreignKeyTable, int foreignKeyId) throws DatabaseActionException {
         Map<String, String> allowedTables = new HashMap<>();
         allowedTables.put("flights", "flightId");

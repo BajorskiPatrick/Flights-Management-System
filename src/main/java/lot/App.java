@@ -1,6 +1,5 @@
 package lot;
 
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,7 +14,7 @@ import java.util.Objects;
 
 public class App extends Application {
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/lot/views/MainApp.fxml"));
 
         Scene scene = new Scene(root);

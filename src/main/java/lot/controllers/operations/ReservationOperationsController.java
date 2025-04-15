@@ -13,7 +13,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import lot.controllers.menu.MenuController;
-import lot.exceptions.dao.DatabaseActionException;
 import lot.exceptions.services.EmailException;
 import lot.exceptions.services.NotFoundException;
 import lot.exceptions.services.ServiceException;

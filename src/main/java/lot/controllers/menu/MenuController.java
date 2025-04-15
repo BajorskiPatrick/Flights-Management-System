@@ -40,7 +40,6 @@ public class MenuController {
     private Scene scene;
     private Parent root;
     private String resourceType;
-
     private final FlightService flightService = new FlightService(new FlightDao());
     private final ReservationService reservationService = new ReservationService(new ReservationDao(), new FlightDao(), new PassengerDao(), new EmailService());
     private final PassengerService passengerService = new PassengerService(new PassengerDao());
@@ -74,24 +73,14 @@ public class MenuController {
                 reservationController.seeAllReservations();
                 break;
         }
-
-        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/lot/css/SearchView.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
-
+        setStage(event, "SearchView.css");
     }
 
     @FXML
     private void searchOperation(ActionEvent event) throws IOException {
         FXMLLoader loader = this.getLoader("SearchView");
         root = loader.load();
-        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/lot/css/SearchView.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
+        setStage(event, "SearchView.css");
     }
 
     @FXML
@@ -103,12 +92,7 @@ public class MenuController {
             ReservationOperationsController reservationController = loader.getController();
             reservationController.configureFlightsAndPassengersIds("add");
         }
-
-        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/lot/css/AddUpdateView.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
+        setStage(event, "AddUpdateView.css");
     }
 
     @FXML
@@ -130,12 +114,7 @@ public class MenuController {
                 reservationController.configureReservationIds("update");
                 break;
         }
-
-        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/lot/css/AddUpdateView.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
+        setStage(event, "AddUpdateView.css");
     }
 
     @FXML
@@ -157,33 +136,20 @@ public class MenuController {
                 reservationController.configureReservationIds("delete");
                 break;
         }
-
-        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/lot/css/DeleteView.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
+        setStage(event,"DeleteView.css");
     }
 
     @FXML
     private void goBack(ActionEvent event) throws IOException {
-        loadView("/lot/views/MainApp.fxml", event);
-    }
-
-    private void loadView(String viewPath, ActionEvent event) throws IOException {
-        root = FXMLLoader.load(getClass().getResource(viewPath));
-        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/lot/css/MainApp.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
+        root = FXMLLoader.load(getClass().getResource("/lot/views/MainApp.fxml"));
+        setStage(event, "MainApp.css");
     }
 
     private FXMLLoader getLoader(String view) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/lot/views/operations/" + resourceType + "/" + resourceType.substring(0, 1).toUpperCase() + resourceType.substring(1) + view + ".fxml"));
         loader.setControllerFactory(type -> {
             if (type == FlightOperationsController.class) {
-                return new FlightOperationsController(flightService); // Wstrzyknięcie
+                return new FlightOperationsController(flightService);
             }
             else if (type == ReservationOperationsController.class) {
                 return new ReservationOperationsController(reservationService);
@@ -191,12 +157,22 @@ public class MenuController {
             else if (type == PassengerOperationsController.class) {
                 return new PassengerOperationsController(passengerService);
             }
+
             try {
                 return type.getDeclaredConstructor().newInstance();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 throw new RuntimeException(e);
             }
         });
         return loader;
+    }
+
+    private void setStage(ActionEvent event, String cssName) {
+        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/lot/css/" + cssName).toExternalForm());
+        stage.setScene(scene);
+        stage.show();
     }
 }

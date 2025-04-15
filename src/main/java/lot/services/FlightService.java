@@ -2,11 +2,9 @@ package lot.services;
 
 import lot.dao.FlightDao;
 import lot.exceptions.dao.DatabaseActionException;
-import lot.exceptions.services.NotFoundException;
 import lot.exceptions.services.ServiceException;
 import lot.exceptions.services.ValidationException;
 import lot.models.Flight;
-
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,14 +27,12 @@ public class FlightService {
         Flight flight = new Flight(departure, destination, dd, duration, seatRowsAmount, twoWay);
 
         try {
-            int id = flightDao.save(flight);
-            return id;
+            return flightDao.save(flight);
         }
         catch (DatabaseActionException e) {
             throw new ServiceException("Failed to save new flight due to some database problem", e);
         }
     }
-
 
     public List<Flight> getAllFlights() {
         try {
@@ -47,12 +43,8 @@ public class FlightService {
         }
     }
 
-
     public Flight getFlightById(int flightId) {
         try {
-//            if (!flightDao.existsById(flightId)) {
-//                throw new NotFoundException("Flight with id: " + flightId + " can not be fetched, because it does not exists in the database");
-//            }
             return flightDao.findById(flightId);
         }
         catch (DatabaseActionException e) {
@@ -96,24 +88,8 @@ public class FlightService {
         }
     }
 
-    public List<String> getAvailableSeats(int flightId) {
-        try {
-            return flightDao.getAvailableSeatsNumbers(flightId);
-        }
-        catch (DatabaseActionException e) {
-            throw new ServiceException("Failed to fetch available seats numbers for flight with id: " + flightId + " due to some database problem", e);
-        }
-    }
-
-
     public void updateExistingFlight(int flightId, String departure, String destination, LocalDate departureDate, String time, int duration, int seatRowsAmount, Boolean twoWay) {
-        Flight flight;
-        try {
-            flight = getFlightById(flightId);
-        }
-        catch (NotFoundException e) {
-            throw new NotFoundException("Flight with id: " + flightId + " can not be updated, because it does not exists in the database");
-        }
+        Flight flight = getFlightById(flightId);
 
         validateData(departureDate, time, duration, seatRowsAmount);
         LocalTime t = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
@@ -122,7 +98,6 @@ public class FlightService {
         if (seatRowsAmount < flight.getSeatRowsAmount()) {
             throw new ValidationException("New seat rows amount must be greater or equal to previous seat rows amount");
         }
-
 
         try {
             Flight newFlight = new Flight(flightId, departure, destination, dd, duration, seatRowsAmount, twoWay);
@@ -138,19 +113,14 @@ public class FlightService {
         }
     }
 
-
     public void deleteFlight(int flightId) {
         try {
-            if (!flightDao.existsById(flightId)) {
-                throw new NotFoundException("Flight with id: " + flightId  + " can not be deleted, because it does not exists in the database");
-            }
             flightDao.delete(flightId);
         }
         catch (DatabaseActionException e) {
             throw new ServiceException("Failed to delete flight with id: " + flightId + " due to some database problem", e);
         }
     }
-
 
     private void validateData(LocalDate date, String time, int duration, int seatRowsAmount) {
         LocalTime t;

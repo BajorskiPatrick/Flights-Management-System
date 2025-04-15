@@ -18,7 +18,10 @@ public class Reservation {
      * @param id reservation's id number
      * @param flightId id of the flight to which this reservation is assigned
      * @param passengerId id of the passenger whose this reservation is
+     * @param passengerName name of the passenger whose this reservation is
+     * @param passengerSurname surname of the passenger whose this reservation is
      * @param seatNumber number of the seat assigned to this reservation
+     * @param departureDate departure date of flight assigned to this reservation
      */
     public Reservation(int id, int flightId, int passengerId, String passengerName, String passengerSurname, String seatNumber, LocalDateTime departureDate) {
         this.id = id;

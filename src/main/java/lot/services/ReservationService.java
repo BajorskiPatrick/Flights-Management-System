@@ -5,14 +5,10 @@ import lot.dao.PassengerDao;
 import lot.dao.ReservationDao;
 import lot.exceptions.dao.DatabaseActionException;
 import lot.exceptions.services.EmailException;
-import lot.exceptions.services.NotFoundException;
 import lot.exceptions.services.ServiceException;
-import lot.exceptions.services.ValidationException;
 import lot.models.Reservation;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
 
 public class ReservationService {
     private final ReservationDao reservationDao;
@@ -30,10 +26,9 @@ public class ReservationService {
     public int makeNewReservation(int flightId, int passengerId, String seatNumber) {
         try {
             Reservation reservation = new Reservation(flightId, passengerId, seatNumber);
-            int id = reservationDao.save(reservation);
-            return id;
-
-        } catch (DatabaseActionException e) {
+            return reservationDao.save(reservation);
+        }
+        catch (DatabaseActionException e) {
             throw new ServiceException("Failed to create new reservation due to some database problem", e);
         }
     }
@@ -74,12 +69,8 @@ public class ReservationService {
         }
     }
 
-
     public Reservation getReservationById(int reservationId) {
         try {
-            if (!reservationDao.existsById(reservationId)) {
-                throw new NotFoundException("Reservation with id: " + reservationId + " can not be fetched, because it does not exists in the database");
-            }
             return reservationDao.findById(reservationId);
         }
         catch (DatabaseActionException e) {
@@ -89,9 +80,6 @@ public class ReservationService {
 
     public List<Reservation> getReservationsByFlightId(int flightId) {
         try {
-            if (!flightDao.existsById(flightId)) {
-                throw new NotFoundException("Reservations with flight's id: " + flightId + " can not be fetched, because it does not exists in the database");
-            }
             return reservationDao.findAllByForeignKey("flights", flightId);
         }
         catch (DatabaseActionException e) {
@@ -101,9 +89,6 @@ public class ReservationService {
 
     public List<Reservation> getReservationsByPassengerId(int passengerId) {
         try {
-            if (!passengerDao.existsById(passengerId)) {
-                throw new NotFoundException("Reservations with passenger's id: " + passengerId + " can not be fetched, because it does not exists in the database");
-            }
             return reservationDao.findAllByForeignKey("passengers", passengerId);
         }
         catch (DatabaseActionException e) {
@@ -122,10 +107,6 @@ public class ReservationService {
 
     public void updateExistingReservation(int reservationId, int flightId, int passengerId, String seatNumber) {
         try {
-            if (!reservationDao.existsById(reservationId)) {
-                throw new NotFoundException("Reservation with id: " + reservationId + " can not be updated, because it does not exists in the database");
-            }
-//            validateData(flightId, passengerId, seatNumber, reservationId);
             Reservation reservation = new Reservation(reservationId, flightId, passengerId, seatNumber);
             reservationDao.update(reservation);
         }
@@ -136,9 +117,6 @@ public class ReservationService {
 
     public void deleteReservation(int reservationId) {
         try {
-            if (!reservationDao.existsById(reservationId)) {
-                throw new NotFoundException("Reservation with id: " + reservationId + " can not be deleted, because it does not exists in the database");
-            }
             reservationDao.delete(reservationId);
         }
         catch (DatabaseActionException e) {
@@ -162,9 +140,6 @@ public class ReservationService {
         }
         catch (DatabaseActionException e) {
             throw new EmailException("Failed to collect data required to send email due to some database problem", e);
-        }
-        catch (NotFoundException e) {
-            throw new EmailException("Failed to send email about reservation with id: " + reservationId + ", because it was not found ", e);
         }
     }
 }

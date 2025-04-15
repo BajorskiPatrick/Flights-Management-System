@@ -62,7 +62,6 @@ public class PassengerDao implements GenericDao<Passenger> {
         }
     }
 
-
     @Override
     public List<Passenger> findAll() throws DatabaseActionException {
         List<Passenger> passengers = new ArrayList<>();
@@ -88,7 +87,6 @@ public class PassengerDao implements GenericDao<Passenger> {
             throw new DatabaseActionException("Database error while fetching all passengers details", e);
         }
     }
-
 
     @Override
     public int save(Passenger passenger) throws DatabaseActionException {
@@ -215,4 +213,3 @@ public class PassengerDao implements GenericDao<Passenger> {
         }
     }
 }
-

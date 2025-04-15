@@ -25,8 +25,8 @@
     -fx-text-fill: white;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-min-width: 200px; /* Zamiast pref-width */
-    -fx-max-width: 200px; /* Zapobiega rozciąganiu */
+    -fx-min-width: 200px;
+    -fx-max-width: 200px;
     -fx-pref-height: 40px;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1);
     -fx-alignment: center;
@@ -51,8 +51,6 @@
     -fx-max-width: 150px;
     -fx-max-height: 40px;
 }
-
-
 
 .combo-box {
     -fx-background-color: #4682B4;

@@ -48,10 +48,6 @@ public class Flight {
         this.twoWay = twoWay;
     }
 
-    /**
-     *
-     * @return
-     */
     public int getId() {
         return id;
     }
@@ -106,18 +102,5 @@ public class Flight {
 
     public void setTwoWay(Boolean twoWay) {
         this.twoWay = twoWay;
-    }
-
-    @Override
-    public String toString() {
-        return "Flight{" +
-                "id=" + id +
-                ", departure='" + departure + '\'' +
-                ", destination='" + destination + '\'' +
-                ", departureDate=" + departureDate +
-                ", duration=" + duration +
-                ", seatAmount=" + seatRowsAmount +
-                ", twoWay=" + twoWay +
-                '}';
     }
 }

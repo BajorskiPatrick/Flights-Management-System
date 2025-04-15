@@ -12,4 +12,3 @@ public interface GenericDao<T> {
     void delete(int id) throws DatabaseActionException;
     Boolean existsById(int id) throws DatabaseActionException;
 }
-

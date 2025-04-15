@@ -19,7 +19,6 @@ public class MakeSeatAvailableTrigger implements Trigger {
                 WHERE flightId = ? AND seatNumber = ?
                 """;
 
-
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, (int) oldRow[1]);
             ps.setString(2, (String) oldRow[3]);
