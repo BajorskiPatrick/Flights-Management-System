@@ -32,14 +32,12 @@ public class MainAppController {
     public void manageFlights(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/lot/views/menu/MenuView.fxml"));
         try {
-            setStage(event, loader);
+            setStage(event, loader, "flight");
         }
         catch (IOException e) {
             showErrorAlert(e.getMessage());
             return;
         }
-        MenuController controller = loader.getController();
-        controller.setResourceType("flight");
         stage.show();
     }
 
@@ -51,14 +49,12 @@ public class MainAppController {
     public void manageReservations(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/lot/views/menu/MenuView.fxml"));
         try {
-            setStage(event, loader);
+            setStage(event, loader, "reservation");
         }
         catch (IOException e) {
             showErrorAlert(e.getMessage());
             return;
         }
-        MenuController controller = loader.getController();
-        controller.setResourceType("reservation");
         stage.show();
     }
 
@@ -70,14 +66,12 @@ public class MainAppController {
     public void managePassengers(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/lot/views/menu/MenuView.fxml"));
         try {
-            setStage(event, loader);
+            setStage(event, loader, "passenger");
         }
         catch (IOException e) {
             showErrorAlert(e.getMessage());
             return;
         }
-        MenuController controller = loader.getController();
-        controller.setResourceType("passenger");
         stage.show();
     }
 
@@ -86,8 +80,10 @@ public class MainAppController {
      *
      * @param event the action event that triggered this navigation
      */
-    private void setStage(ActionEvent event, FXMLLoader loader) throws IOException {
+    private void setStage(ActionEvent event, FXMLLoader loader, String type) throws IOException {
         Parent root = loader.load();
+        MenuController controller = loader.getController();
+        controller.setResourceType(type);
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/lot/css/Menu.css").toExternalForm());

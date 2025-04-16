@@ -16,7 +16,7 @@
     <TextField fx:id="updateTimeField" layoutX="275.0" layoutY="240.0" prefWidth="250" promptText="Departure hour in HH:mm format" />
     <TextField fx:id="updateDurationField" layoutX="275.0" layoutY="290.0" prefWidth="250" promptText="Flight duration in minutes" />
     <TextField fx:id="updateSeatRowsAmountField" layoutX="275.0" layoutY="340.0" prefWidth="250" promptText="Seat rows amount" />
-    <CheckBox fx:id="updateTwoWayField" layoutX="351.0" layoutY="390.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="150.0" text="Is two way?" />
+    <CheckBox fx:id="updateTwoWayField" layoutX="351.0" layoutY="390.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="150.0" text="Is two-way?" />
 
     <Button fx:id="updateButton" layoutX="350.0" layoutY="440.0" onAction="#updateFlight" prefWidth="100" text="Update" />
     <Label fx:id="updateLabel" alignment="CENTER" layoutY="30.0" prefHeight="17.0" prefWidth="802.0" text="Provide updated data (first, on the left, select which to update)">
