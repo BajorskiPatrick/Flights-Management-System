@@ -13,7 +13,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import lot.controllers.menu.MenuController;
-import lot.exceptions.services.NotFoundException;
 import lot.exceptions.services.ServiceException;
 import lot.exceptions.services.ValidationException;
 import lot.models.Passenger;
@@ -24,11 +23,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Controller for handling passenger-related operations in the UI.
+ * Manages the display, search, addition, update, and deletion of passengers.
+ */
 public class PassengerOperationsController {
     @FXML
-    public ComboBox<Integer> idSearchField;
+    private ComboBox<Integer> idSearchField;
     @FXML
-    public TextField surnameSearchField;
+    private TextField surnameSearchField;
 
     @FXML
     private TableView<Passenger> passengerTable;
@@ -84,10 +87,18 @@ public class PassengerOperationsController {
     private Parent root;
     private final PassengerService passengerService;
 
+    /**
+     * Constructs a PassengerOperationsController with the specified PassengerService.
+     *
+     * @param passengerService the service to handle passenger operations
+     */
     public PassengerOperationsController(PassengerService passengerService) {
         this.passengerService = passengerService;
     }
 
+    /**
+     * Initializes the controller and sets up table column bindings.
+     */
     @FXML
     public void initialize() {
         if (passengerTable != null) {
@@ -99,6 +110,11 @@ public class PassengerOperationsController {
         }
     }
 
+    /**
+     * Configures the list of passenger IDs for different operations.
+     *
+     * @param type the type of operation ("delete" or "update")
+     */
     public void configurePassengersIds(String type) {
         ids.addAll(passengerService.getIds().stream().sorted().collect(Collectors.toList()));
         if (type.equals("delete")) {
@@ -113,6 +129,9 @@ public class PassengerOperationsController {
         }
     }
 
+    /**
+     * Loads and displays all passengers in the table.
+     */
     public void seeAllPassengers() {
         try {
             List<Passenger> passengers = passengerService.getAllPassengers();
@@ -123,6 +142,11 @@ public class PassengerOperationsController {
         }
     }
 
+    /**
+     * Changes the visibility of search fields based on the selected search criteria.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
     private void changeVisibility(ActionEvent event) {
         Button button = (Button) event.getSource();
@@ -146,6 +170,11 @@ public class PassengerOperationsController {
         }
     }
 
+    /**
+     * Performs a search based on the selected criteria and updates the table.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
     private void performSearchByCriteria(ActionEvent event) {
         try {
@@ -171,6 +200,11 @@ public class PassengerOperationsController {
         }
     }
 
+    /**
+     * Deletes the selected passenger after confirmation.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
     private void deleteSelectedId(ActionEvent event) {
         Integer choice = deleteId.getValue();
@@ -188,9 +222,6 @@ public class PassengerOperationsController {
             try {
                 passengerService.deletePassenger(choice);
             }
-            catch (NotFoundException e) {
-                showDataErrorMessage(e.getMessage());
-            }
             catch (ServiceException e) {
                 showApplicationErrorMessage(e.getMessage());
             }
@@ -200,6 +231,11 @@ public class PassengerOperationsController {
         clearForm(deletionPane, "Select id for deletion");
     }
 
+    /**
+     * Adds a new passenger with the provided details.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
     private void addNewPassenger(ActionEvent event) {
         String name = nameField.getText();
@@ -237,6 +273,11 @@ public class PassengerOperationsController {
         clearForm(addPane, "Type new passenger data");
     }
 
+    /**
+     * Updates an existing passenger with the provided details.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
     private void updatePassenger(ActionEvent event) {
         Integer id = idToUpdateSelectorBox.getValue();
@@ -273,15 +314,30 @@ public class PassengerOperationsController {
         clearForm(updatePane, "Provide updated data (first, on the left, select which to update)");
     }
 
+    /**
+     * Updates the deletion confirmation label with the selected ID.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
     private void changeDeletionLabel(ActionEvent event) {
         Integer choice = deleteId.getValue();
         choiceLabel.setText("You choose id: " + choice);
     }
 
+    /**
+     * Returns to the main menu view.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
-    private void goBack(ActionEvent event) throws IOException {
-        loadView("/lot/views/menu/MenuView.fxml", event);
+    private void goBack(ActionEvent event) {
+        try {
+            loadView("/lot/views/menu/MenuView.fxml", event);
+        }
+        catch (IOException e) {
+            showApplicationErrorMessage("Failed to load MenuView. " + e.getMessage());
+        }
     }
 
     private void loadView(String viewPath, ActionEvent event) throws IOException {

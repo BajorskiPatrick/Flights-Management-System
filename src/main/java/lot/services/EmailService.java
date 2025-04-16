@@ -7,6 +7,9 @@ import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.*;
 
+/**
+ * Service responsible for sending email notifications.
+ */
 public class EmailService {
     private static final String SMTP_HOST;
     private static final int SMTP_PORT;
@@ -21,13 +24,26 @@ public class EmailService {
         PASSWORD = dotenv.get("EMAIL_PASSWORD");
     }
 
+    /**
+     * Constructs a new instance of the class with default values.
+     * Initializes all fields to their default initial values.
+     */
+    public EmailService() {}
+
+    /**
+     * Sends a reservation confirmation email to the specified recipient.
+     *
+     * @param recipientEmail the email address of the recipient
+     * @param reservationDetails the details of the reservation to include in the email
+     * @throws EmailException if there is an error while sending the email
+     */
     public void sendConfirmationEmail(String recipientEmail, String reservationDetails) {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", SMTP_HOST);
         props.put("mail.smtp.port", SMTP_PORT);
-        props.put("mail.smtp.ssl.trust", SMTP_HOST);  // Ważne dla Gmaila!
+        props.put("mail.smtp.ssl.trust", SMTP_HOST);
         props.put("mail.smtp.ssl.protocols", "TLSv1.2");
 
         Session session = Session.getInstance(props, new Authenticator() {

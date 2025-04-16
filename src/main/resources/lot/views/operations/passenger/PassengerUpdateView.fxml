@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 
 <?import javafx.scene.control.ComboBox?>
-<AnchorPane fx:id="updatePane" prefHeight="500" prefWidth="800" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="lot.controllers.operations.PassengerOperationsController">
+<AnchorPane fx:id="updatePane" prefHeight="500" prefWidth="800" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="lot.controllers.operations.PassengerOperationsController">
     <TextField fx:id="updateNameField" layoutX="275.0" layoutY="140.0" prefWidth="250" promptText="Name" />
     <TextField fx:id="updateSurnameField" layoutX="275.0" layoutY="190.0" prefWidth="250" promptText="Surname" />
     <TextField fx:id="updateEmailField" layoutX="275.0" layoutY="240.0" prefWidth="250" promptText="Email" />

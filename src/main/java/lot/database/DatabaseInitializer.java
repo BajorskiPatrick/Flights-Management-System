@@ -7,6 +7,10 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
 
+/**
+ * Initializes and manages the database connection pool and schema.
+ * Uses HikariCP for connection pooling and handles database schema initialization.
+ */
 public class DatabaseInitializer {
     private static final HikariDataSource dataSource;
 
@@ -23,7 +27,19 @@ public class DatabaseInitializer {
         dataSource = new HikariDataSource(config);
     }
 
+    /**
+     * Constructs a new instance of the class with default values.
+     * Initializes all fields to their default initial values.
+     */
+    public DatabaseInitializer() {}
 
+    /**
+     * Initializes the database by executing schema and data scripts.
+     * Only loads initial data if new tables were created during schema initialization.
+     *
+     * @throws SQLException if a database access error occurs
+     * @throws IOException if there's an error reading schema or data files
+     */
     public static void initialize() throws SQLException, IOException {
         Connection conn = DatabaseInitializer.getConnection();
         Statement stmt = conn.createStatement();
@@ -47,10 +63,23 @@ public class DatabaseInitializer {
         conn.close();
     }
 
+    /**
+     * Gets a database connection from the connection pool.
+     *
+     * @return a Connection object from the pool
+     * @throws SQLException if a database access error occurs
+     */
     public static Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
 
+    /**
+     * Counts the number of tables in the database.
+     *
+     * @param conn the database connection to use
+     * @return the number of tables in the database
+     * @throws SQLException if a database access error occurs
+     */
     private static int countTables(Connection conn) throws SQLException {
         try (ResultSet rs = conn.getMetaData().getTables(null, null, "%", null)) {
             int count = 0;

@@ -9,7 +9,19 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Access Object for Passenger entities, providing database operations.
+ */
 public class PassengerDao implements GenericDao<Passenger> {
+    /**
+     * Constructs a new instance of the class with default values.
+     * Initializes all fields to their default initial values.
+     */
+    public PassengerDao() {}
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Passenger findById(int id) throws DatabaseActionException {
         String query =
@@ -35,6 +47,13 @@ public class PassengerDao implements GenericDao<Passenger> {
         }
     }
 
+    /**
+     * Finds passengers by surname.
+     *
+     * @param surname the surname to search for
+     * @return a list of passengers matching the surname
+     * @throws DatabaseActionException if a database error occurs
+     */
     public List<Passenger> findBySurname(String surname) throws DatabaseActionException {
         String query =
                 """
@@ -62,6 +81,9 @@ public class PassengerDao implements GenericDao<Passenger> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Passenger> findAll() throws DatabaseActionException {
         List<Passenger> passengers = new ArrayList<>();
@@ -88,6 +110,9 @@ public class PassengerDao implements GenericDao<Passenger> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int save(Passenger passenger) throws DatabaseActionException {
         String query =
@@ -121,6 +146,9 @@ public class PassengerDao implements GenericDao<Passenger> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void update(Passenger passenger) throws DatabaseActionException {
         String query =
@@ -146,6 +174,9 @@ public class PassengerDao implements GenericDao<Passenger> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void delete(int id) throws DatabaseActionException {
         String query =
@@ -165,6 +196,9 @@ public class PassengerDao implements GenericDao<Passenger> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Boolean existsById(int id) throws DatabaseActionException {
         String query =
@@ -188,6 +222,12 @@ public class PassengerDao implements GenericDao<Passenger> {
         }
     }
 
+    /**
+     * Retrieves all passenger IDs.
+     *
+     * @return a list of all passenger IDs
+     * @throws DatabaseActionException if a database error occurs
+     */
     public List<Integer> findAllId() throws DatabaseActionException {
         List<Integer> ids = new ArrayList<>();
 

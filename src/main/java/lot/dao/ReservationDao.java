@@ -8,7 +8,19 @@ import lot.utils.ResultSetMapper;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * Data Access Object for Reservation entities, providing database operations.
+ */
 public class ReservationDao implements GenericDao<Reservation> {
+    /**
+     * Constructs a new instance of the class with default values.
+     * Initializes all fields to their default initial values.
+     */
+    public ReservationDao() {}
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Reservation findById(int id) throws DatabaseActionException {
         String query =
@@ -37,6 +49,9 @@ public class ReservationDao implements GenericDao<Reservation> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Reservation> findAll() throws DatabaseActionException {
         List<Reservation> reservations = new ArrayList<>();
@@ -67,6 +82,14 @@ public class ReservationDao implements GenericDao<Reservation> {
         }
     }
 
+    /**
+     * Finds reservations by a foreign key (flight or passenger).
+     *
+     * @param foreignKeyTable the foreign key table name ("flights" or "passengers")
+     * @param foreignKeyId the foreign key ID
+     * @return a list of matching reservations
+     * @throws DatabaseActionException if a database error occurs or invalid table name is provided
+     */
     public List<Reservation> findAllByForeignKey(String foreignKeyTable, int foreignKeyId) throws DatabaseActionException {
         Map<String, String> allowedTables = new HashMap<>();
         allowedTables.put("flights", "flightId");
@@ -107,6 +130,13 @@ public class ReservationDao implements GenericDao<Reservation> {
         }
     }
 
+    /**
+     * Finds reservations by passenger surname.
+     *
+     * @param surname the passenger surname to search for
+     * @return a list of matching reservations
+     * @throws DatabaseActionException if a database error occurs
+     */
     public List<Reservation> findAllBySurname(String surname) throws DatabaseActionException {
         List<Reservation> reservations = new ArrayList<>();
         String query =
@@ -136,6 +166,9 @@ public class ReservationDao implements GenericDao<Reservation> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int save(Reservation reservation) throws DatabaseActionException {
         String query =
@@ -168,6 +201,9 @@ public class ReservationDao implements GenericDao<Reservation> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void update(Reservation reservation) throws DatabaseActionException {
         String query =
@@ -192,6 +228,9 @@ public class ReservationDao implements GenericDao<Reservation> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void delete(int id) throws DatabaseActionException {
         String query =
@@ -211,6 +250,9 @@ public class ReservationDao implements GenericDao<Reservation> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Boolean existsById(int id) throws DatabaseActionException {
         String query =
@@ -234,6 +276,13 @@ public class ReservationDao implements GenericDao<Reservation> {
         }
     }
 
+    /**
+     * Checks if a flight associated with a reservation has already taken place.
+     *
+     * @param flightId the ID of the flight to check
+     * @return true if the flight has taken place, false otherwise
+     * @throws DatabaseActionException if a database error occurs
+     */
     public Boolean hasTakenPlace(int flightId) throws DatabaseActionException {
         String query =
                 """
@@ -256,6 +305,12 @@ public class ReservationDao implements GenericDao<Reservation> {
         }
     }
 
+    /**
+     * Retrieves all reservation IDs.
+     *
+     * @return a list of all reservation IDs
+     * @throws DatabaseActionException if a database error occurs
+     */
     public List<Integer> findAllId() throws DatabaseActionException {
         List<Integer> ids = new ArrayList<>();
 

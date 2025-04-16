@@ -13,7 +13,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import lot.controllers.menu.MenuController;
-import lot.exceptions.services.NotFoundException;
 import lot.exceptions.services.ServiceException;
 import lot.exceptions.services.ValidationException;
 import lot.models.Flight;
@@ -26,17 +25,21 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Controller for handling flight-related operations in the UI.
+ * Manages the display, search, addition, update, and deletion of flights.
+ */
 public class FlightOperationsController {
     @FXML
-    public AnchorPane searchPane;
+    private AnchorPane searchPane;
     @FXML
-    public DatePicker dateSearchField;
+    private DatePicker dateSearchField;
     @FXML
-    public TextField destinationSearchField;
+    private TextField destinationSearchField;
     @FXML
-    public ComboBox<Integer> idSearchField;
+    private ComboBox<Integer> idSearchField;
     @FXML
-    public TextField departureSearchField;
+    private TextField departureSearchField;
 
     @FXML
     private AnchorPane updatePane;
@@ -108,10 +111,18 @@ public class FlightOperationsController {
     private Parent root;
     private final FlightService flightService;
 
+    /**
+     * Constructs a FlightOperationsController with the specified FlightService.
+     *
+     * @param flightService the service to handle flight operations
+     */
     public FlightOperationsController(FlightService flightService) {
         this.flightService = flightService;
     }
 
+    /**
+     * Initializes the controller and sets up table column bindings.
+     */
     @FXML
     public void initialize() {
         if (flightTable != null) {
@@ -125,6 +136,11 @@ public class FlightOperationsController {
         }
     }
 
+    /**
+     * Configures the list of flight IDs for different operations.
+     *
+     * @param type the type of operation ("delete" or "update")
+     */
     public void configureFlightsIds(String type) {
         ids.clear();
         ids.addAll(flightService.getIds().stream().sorted().collect(Collectors.toList()));
@@ -141,6 +157,9 @@ public class FlightOperationsController {
         }
     }
 
+    /**
+     * Loads and displays all flights in the table.
+     */
     public void seeAllFlights() {
         try {
             List<Flight> flights = flightService.getAllFlights();
@@ -151,6 +170,11 @@ public class FlightOperationsController {
         }
     }
 
+    /**
+     * Changes the visibility of search fields based on the selected search criteria.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
     private void changeVisibility(ActionEvent event) {
         Button button = (Button) event.getSource();
@@ -194,6 +218,11 @@ public class FlightOperationsController {
         }
     }
 
+    /**
+     * Performs a search based on the selected criteria and updates the table.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
     private void performSearchByCriteria(ActionEvent event) {
         try {
@@ -236,6 +265,11 @@ public class FlightOperationsController {
         }
     }
 
+    /**
+     * Deletes the selected flight after confirmation.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
     private void deleteSelectedId(ActionEvent event) {
         Integer choice = deleteId.getValue();
@@ -254,9 +288,6 @@ public class FlightOperationsController {
             try {
                 flightService.deleteFlight(choice);
             }
-            catch (NotFoundException e) {
-                showDataErrorMessage(e.getMessage());
-            }
             catch (ServiceException e) {
                 showApplicationErrorMessage(e.getMessage());
             }
@@ -266,6 +297,11 @@ public class FlightOperationsController {
         clearForm(deletionPane, "Select id for deletion");
     }
 
+    /**
+     * Adds a new flight with the provided details.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
     private void addNewFlight(ActionEvent event) {
         String departure = departureField.getText();
@@ -327,6 +363,11 @@ public class FlightOperationsController {
         clearForm(addPane, "Type new flight data");
     }
 
+    /**
+     * Updates an existing flight with the provided details.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
     private void updateFlight(ActionEvent event) {
         Integer id = idToUpdateSelectorBox.getValue();
@@ -388,11 +429,26 @@ public class FlightOperationsController {
         clearForm(updatePane, "Provide updated data (first, on the left, select which to update)");
     }
 
+    /**
+     * Returns to the main menu view.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
-    private void goBack(ActionEvent event) throws IOException {
-        loadView("/lot/views/menu/MenuView.fxml", event);
+    private void goBack(ActionEvent event) {
+        try {
+            loadView("/lot/views/menu/MenuView.fxml", event);
+        }
+        catch (IOException e) {
+            showApplicationErrorMessage("Failed to load MenuView. " + e.getMessage());
+        }
     }
 
+    /**
+     * Updates the deletion confirmation label with the selected ID.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
     private void changeDeletionLabel(ActionEvent event) {
         Integer choice = deleteId.getValue();
@@ -448,7 +504,7 @@ public class FlightOperationsController {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Data exception");
         alert.setHeaderText("Exception related to provided data has occurred");
-        alert.setContentText("Details: " + message);
+        alert.setContentText("Details:\n" + message);
         alert.showAndWait();
     }
 

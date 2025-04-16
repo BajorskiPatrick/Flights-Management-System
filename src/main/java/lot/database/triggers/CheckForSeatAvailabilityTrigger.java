@@ -6,10 +6,32 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * Database trigger that manages seat availability when a reservation is updated.
+ * Makes the old seat available and the new seat unavailable when a reservation's seat is changed.
+ */
 public class CheckForSeatAvailabilityTrigger implements Trigger {
+    /**
+     * Constructs a new instance of the class with default values.
+     * Initializes all fields to their default initial values.
+     */
+    public CheckForSeatAvailabilityTrigger() {}
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void init(Connection conn, String schemaName, String triggerName, String tableName, boolean before, int type) throws SQLException {}
 
+    /**
+     * Trigger logic executed when a reservation is updated.
+     * Updates seat availability status for both old and new seats.
+     *
+     * @param conn the database connection
+     * @param oldRow the row values before update
+     * @param newRow the row values after update
+     * @throws SQLException if a database access error occurs
+     */
     @Override
     public void fire(Connection conn, Object[] oldRow, Object[] newRow) throws SQLException {
         String oldSeatNumber = (String) oldRow[3];
@@ -42,9 +64,15 @@ public class CheckForSeatAvailabilityTrigger implements Trigger {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void close() throws SQLException {}
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void remove() throws SQLException {}
 }

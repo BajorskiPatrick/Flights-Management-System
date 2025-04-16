@@ -14,7 +14,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import lot.controllers.menu.MenuController;
 import lot.exceptions.services.EmailException;
-import lot.exceptions.services.NotFoundException;
 import lot.exceptions.services.ServiceException;
 import lot.models.Reservation;
 import lot.services.ReservationService;
@@ -25,6 +24,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Controller for handling reservation-related operations in the UI.
+ * Manages the display, search, addition, update, and deletion of reservations.
+ */
 public class ReservationOperationsController {
     @FXML
     private TableView<Reservation> reservationTable;
@@ -35,23 +38,23 @@ public class ReservationOperationsController {
     @FXML
     private TableColumn<Reservation, Integer> passengerIdColumn;
     @FXML
-    public TableColumn<Reservation, String> passengerNameColumn;
+    private TableColumn<Reservation, String> passengerNameColumn;
     @FXML
-    public TableColumn<Reservation, String> passengerSurnameColumn;
+    private TableColumn<Reservation, String> passengerSurnameColumn;
     @FXML
     private TableColumn<Reservation, String> seatNumberColumn;
     @FXML
-    public TableColumn<Reservation, LocalDateTime> departureDateColumn;
+    private TableColumn<Reservation, LocalDateTime> departureDateColumn;
     @FXML
     private TableColumn<Reservation, Boolean> tookPlaceColumn;
     @FXML
-    public TextField surnameSearchField;
+    private TextField surnameSearchField;
     @FXML
-    public ComboBox<Integer> idSearchField;
+    private ComboBox<Integer> idSearchField;
     @FXML
-    public ComboBox<Integer> flightIdSearchField;
+    private ComboBox<Integer> flightIdSearchField;
     @FXML
-    public ComboBox<Integer> passengerIdSearchField;
+    private ComboBox<Integer> passengerIdSearchField;
 
     @FXML
     private ComboBox<Integer> deleteId;
@@ -93,10 +96,18 @@ public class ReservationOperationsController {
     private Parent root;
     private final ReservationService reservationService;
 
+    /**
+     * Constructs a ReservationOperationsController with the specified ReservationService.
+     *
+     * @param reservationService the service to handle reservation operations
+     */
     public ReservationOperationsController(ReservationService reservationService) {
         this.reservationService = reservationService;
     }
 
+    /**
+     * Initializes the controller and sets up table column bindings.
+     */
     @FXML
     public void initialize() {
         if (reservationTable != null) {
@@ -111,6 +122,11 @@ public class ReservationOperationsController {
         }
     }
 
+    /**
+     * Configures the list of reservation IDs for different operations.
+     *
+     * @param type the type of operation ("delete" or "update")
+     */
     public void configureReservationIds(String type) {
         reservationIds.addAll(reservationService.getIds().stream().sorted().collect(Collectors.toList()));
         if (type.equals("delete")) {
@@ -125,6 +141,11 @@ public class ReservationOperationsController {
         }
     }
 
+    /**
+     * Configures the lists of flight and passenger IDs for different operations.
+     *
+     * @param type the type of operation ("add" or "update")
+     */
     public void configureFlightsAndPassengersIds(String type) {
         flightIds.addAll(reservationService.getFlightIds().stream().sorted().collect(Collectors.toList()));
         passengerIds.addAll(reservationService.getPassengerIds().stream().sorted().collect(Collectors.toList()));
@@ -147,7 +168,9 @@ public class ReservationOperationsController {
         }
     }
 
-
+    /**
+     * Loads and displays all reservations in the table.
+     */
     public void seeAllReservations() {
         try {
             List<Reservation> reservations = reservationService.getAllReservations();
@@ -158,6 +181,11 @@ public class ReservationOperationsController {
         }
     }
 
+    /**
+     * Changes the visibility of search fields based on the selected search criteria.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
     private void changeVisibility(ActionEvent event) {
         Button button = (Button) event.getSource();
@@ -215,6 +243,11 @@ public class ReservationOperationsController {
         }
     }
 
+    /**
+     * Performs a search based on the selected criteria and updates the table.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
     private void performSearchByCriteria(ActionEvent event) {
         try {
@@ -256,6 +289,11 @@ public class ReservationOperationsController {
         }
     }
 
+    /**
+     * Deletes the selected reservation after confirmation.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
     private void deleteSelectedId(ActionEvent event) {
         Integer choice = deleteId.getValue();
@@ -273,9 +311,6 @@ public class ReservationOperationsController {
             try {
                 reservationService.deleteReservation(choice);
             }
-            catch (NotFoundException e) {
-                showDataErrorMessage(e.getMessage());
-            }
             catch (ServiceException e) {
                 showApplicationErrorMessage(e.getMessage());
             }
@@ -285,6 +320,11 @@ public class ReservationOperationsController {
         clearForm(deletionPane, "Select id for deletion");
     }
 
+    /**
+     * Adds a new reservation with the provided details and sends confirmation email.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
     private void addNewReservation(ActionEvent event) {
         Integer flightIdChoice = flightIdBox.getValue();
@@ -329,6 +369,11 @@ public class ReservationOperationsController {
         seatNumberBox.setItems(availableSeatsNumbers);
     }
 
+    /**
+     * Updates an existing reservation with the provided details and sends confirmation email.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
     private void updateReservation(ActionEvent event) {
         Integer reservationIdChoice = idToUpdateSelectorBox.getValue();
@@ -376,15 +421,30 @@ public class ReservationOperationsController {
         updatePassengerIdBox.setItems(passengerIds);
     }
 
+    /**
+     * Updates the deletion confirmation label with the selected ID.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
     private void changeDeletionLabel(ActionEvent event) {
         Integer choice = deleteId.getValue();
         choiceLabel.setText("You choose id: " + choice);
     }
 
+    /**
+     * Returns to the main menu view.
+     *
+     * @param event the action event that triggered this method
+     */
     @FXML
-    private void goBack(ActionEvent event) throws IOException {
-        loadView("/lot/views/menu/MenuView.fxml", event);
+    private void goBack(ActionEvent event) {
+        try {
+            loadView("/lot/views/menu/MenuView.fxml", event);
+        }
+        catch (IOException e) {
+            showApplicationErrorMessage("Failed to load MenuView. " + e.getMessage());
+        }
     }
 
     private void loadView(String viewPath, ActionEvent event) throws IOException {

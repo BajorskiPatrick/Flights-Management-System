@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="deletionPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lot.controllers.operations.FlightOperationsController">
+<AnchorPane fx:id="deletionPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lot.controllers.operations.FlightOperationsController">
     <children>
         <Label fx:id="choiceLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="120.0" prefHeight="35.0" prefWidth="800.0" text="Select id for deletion">
             <font>

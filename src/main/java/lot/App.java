@@ -1,35 +1,79 @@
 package lot;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import lot.database.DatabaseInitializer;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Objects;
 
+/**
+ * Main application class that serves as the entry point for the Flight Management System.
+ * Extends JavaFX Application class to provide the GUI interface.
+ */
 public class App extends Application {
+    /**
+     * Constructs a new instance of the class with default values.
+     * Initializes all fields to their default initial values.
+     */
+    public App() {}
+
+    /**
+     * The main entry point for JavaFX applications.
+     * Initializes and configures the primary application window.
+     *
+     * @param primaryStage the primary stage for this application
+     * @throws IOException if the FXML file cannot be loaded
+     */
     @Override
     public void start(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/lot/views/MainApp.fxml"));
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/lot/views/MainApp.fxml"));
 
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/lot/css/MainApp.css").toExternalForm());
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/lot/css/MainApp.css").toExternalForm());
 
-        Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/plane.png")));
+            primaryStage.setTitle("Flight Management System");
+            primaryStage.setScene(scene);
+            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/plane.png")));
+            primaryStage.setResizable(false);
+            primaryStage.show();
+        }
+        catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Critical Error");
+            alert.setHeaderText("Failed to load application resources");
+            alert.setContentText("Could not load required files to start the application.\n"
+                    + "Please reinstall the application.\n\n"
+                    + "Technical details: " + e.getMessage());
+            alert.showAndWait();
 
-        primaryStage.setTitle("Flight Management System");
-        primaryStage.setScene(scene);
-        primaryStage.getIcons().add(icon);
-        primaryStage.setResizable(false);
+            Platform.exit();
+        }
+        catch (NullPointerException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Resource Error");
+            alert.setHeaderText("Missing application resources");
+            alert.setContentText("Required application files are missing or corrupted.\n"
+                    + "Please reinstall the application.");
+            alert.showAndWait();
 
-        primaryStage.show();
+            Platform.exit();
+        }
     }
 
+    /**
+     * Main method that launches the application.
+     * Initializes the database before starting the JavaFX application.
+     *
+     * @param args command line arguments (not used)
+     */
     public static void main(String[] args) {
         try {
             DatabaseInitializer.initialize();
@@ -46,214 +90,3 @@ public class App extends Application {
         launch();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//import lot.dao.FlightDao;
-//import lot.dao.PassengerDao;
-//import lot.dao.ReservationDao;
-//import lot.database.DatabaseInitializer;
-//import lot.exceptions.dao.DatabaseActionException;
-//import lot.exceptions.services.ServiceException;
-//import lot.models.Seat;
-//import lot.services.EmailService;
-//import lot.services.FlightService;
-//import lot.services.PassengerService;
-//import lot.services.ReservationService;
-//import lot.utils.ResultSetMapper;
-//
-//import java.io.IOException;
-//import java.sql.Connection;
-//import java.sql.ResultSet;
-//import java.sql.SQLException;
-//import java.sql.Statement;
-//import java.util.List;
-//
-//    public static void main(String[] args) {
-//        try {
-//            DatabaseInitializer.initialize();
-//        }
-//        catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        //(1, 1, '1A'),
-//
-//        ReservationService rs = new ReservationService(new ReservationDao(), new FlightDao(), new PassengerDao(), new EmailService());
-//        FlightService fs = new FlightService(new FlightDao());
-//        PassengerService ps = new PassengerService(new PassengerDao());
-//        try {
-//            System.out.println(rs.getReservationsByPassengerId(1));
-//            ps.deletePassenger(1);
-//            System.out.println(rs.getReservationsByPassengerId(1));
-//            int passId = ps.addNewPassenger("Patrick", "Bajorski", "bajorski16@gmail.com", "790356300");
-//            int resId = rs.makeNewReservation(5, passId, "7F");
-//            System.out.println(ps.getPassengerById(passId));
-//            System.out.println(rs.getReservationById(resId));
-//        }
-//        catch (ServiceException e) {
-//            e.printStackTrace();
-//        }
-//
-//        try {
-//            System.out.println(rs.getReservationById(1));
-//            System.out.println("-------------------------------------");
-//            System.out.println(fs.getAvailableSeats(1));
-//
-//            System.out.println();
-//            System.out.println();
-//
-//            rs.updateExistingReservation(1, 1, 1, "7B");
-//            System.out.println(rs.getReservationById(1));
-//            System.out.println("-------------------------------------");
-//            System.out.println(fs.getAvailableSeats(1));
-//
-//            System.out.println();
-//            System.out.println();
-//
-//            rs.makeNewReservation(3, 1, "7B");
-//            System.out.println(rs.getAllReservations());
-//            System.out.println("-------------------------------------");
-//            System.out.println(fs.getAvailableSeats(3));
-//        }
-//        catch (ServiceException e) {
-//            System.err.println(e.getMessage());
-//        }
-//
-//
-//        String query1 =
-//                """
-//                SELECT *
-//                FROM seats
-//                WHERE flightId = 1
-//                """;
-//
-//        String query2 =
-//                """
-//                DELETE FROM reservations
-//                WHERE flightId = 1 AND passengerId = 1
-//                """;
-//
-//
-//        try (
-//                Connection conn = DatabaseInitializer.getConnection();
-//                Statement stmt = conn.createStatement();
-//        ) {
-//            ResultSet rs1 = stmt.executeQuery(query1);
-//            while (rs1.next()) {
-//                System.out.println(ResultSetMapper.mapSeat(rs1));
-//            }
-//            rs1.close();
-//
-//            System.out.println();
-//
-//            stmt.executeUpdate(query2);
-//
-//            ResultSet rs2 = stmt.executeQuery(query1);
-//            while (rs2.next()) {
-//                System.out.println(ResultSetMapper.mapSeat(rs2));
-//            }
-//        }
-//        catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        EmailService emailService = new EmailService();
-//        emailService.sendConfirmationEmail("bajorski16@gmail.com", "Testowy email");
-//
-//        FlightService fs = new FlightService(new FlightDao());
-//        try {
-//            List<Flight> flights = fs.getAllFlights();
-//            for (Flight flight : flights) {
-//                System.out.println(flight);
-//            }
-//            System.out.println();
-//
-//            fs.addNewFlight("Kraków", "Dallas", "2025-06-15 12:00", -1, 10, true);
-//
-//            List<Flight> flights2 = fs.getAllFlights();
-//            for (Flight flight : flights2) {
-//                System.out.println(flight);
-//            }
-//            System.out.println();
-//
-//            fs.updateExistingFlight(11,"Kraków", "Dallas", "2025-06-15 12:00", 800, 10, true);
-//
-//            List<Flight> flights3 = fs.getAllFlights();
-//            for (Flight flight : flights3) {
-//                System.out.println(flight);
-//            }
-//            System.out.println();
-//
-//            fs.deleteFlight(11);
-//
-//            List<Flight> flights4 = fs.getAllFlights();
-//            for (Flight flight : flights4) {
-//                System.out.println(flight);
-//            }
-//            System.out.println();
-//        }
-//        catch (ServiceException e) {
-//            e.printStackTrace();
-//        }
-//        catch (NotFoundException e) {
-//            System.err.println(e.getMessage());
-//        }
-//        catch (ValidationException e) {
-//            System.err.println(e.getMessage());
-//        }
-//    }
-//
-//
-//        try (Connection conn = DatabaseInitializer.getConnection()) {
-//            Statement stmt = conn.createStatement();
-//            String query = "select * from reservations r where r.passengerId = 1";
-//            ResultSet rs = stmt.executeQuery(query);
-//            while (rs.next()) {
-//                Reservation res = ResultSetMapper.mapReservation(rs);
-//                System.out.println(res);
-//            }
-//            stmt.close();
-//        }
-//        catch (SQLException e) {
-//            e.printStackTrace();
-//        }

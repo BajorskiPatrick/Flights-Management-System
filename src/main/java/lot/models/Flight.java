@@ -2,6 +2,9 @@ package lot.models;
 
 import java.time.LocalDateTime;
 
+/**
+ * Represents a flight with its details including departure, destination, and timing information.
+ */
 public class Flight {
     private int id;
     private String departure;
@@ -12,13 +15,15 @@ public class Flight {
     private Boolean twoWay;
 
     /**
-     * Constructor used to create Flight object from data retrieved from a database
-     * @param id flight's id number
-     * @param departure flight's sour
-     * @param destination flight's destination
-     * @param departureDate flight's departure date
-     * @param duration flight's duration
-     * @param twoWay boolean value indicating that this flight is a one-way (false) or a two-way (true) flight
+     * Constructs a Flight object with data retrieved from a database.
+     *
+     * @param id the flight's unique identifier
+     * @param departure the flight's departure location
+     * @param destination the flight's destination location
+     * @param departureDate the flight's departure date and time
+     * @param duration the flight's duration in minutes
+     * @param seatRowsAmount the number of seat rows in the flight
+     * @param twoWay indicates whether the flight is two-way (true) or one-way (false)
      */
     public Flight(int id, String departure, String destination, LocalDateTime departureDate, int duration, int seatRowsAmount, Boolean twoWay) {
         this.id = id;
@@ -31,12 +36,14 @@ public class Flight {
     }
 
     /**
-     * Constructor used to create Flight object from data received from the user
-     * @param departure flight's sour
-     * @param destination flight's destination
-     * @param departureDate flight's departure date
-     * @param duration flight's duration
-     * @param twoWay boolean value indicating that this flight is a one-way (false) or a two-way (true) flight
+     * Constructs a Flight object with data received from the user.
+     *
+     * @param departure the flight's departure location
+     * @param destination the flight's destination location
+     * @param departureDate the flight's departure date and time
+     * @param duration the flight's duration in minutes
+     * @param seatRowsAmount the number of seat rows in the flight
+     * @param twoWay indicates whether the flight is two-way (true) or one-way (false)
      */
     public Flight(String departure, String destination, LocalDateTime departureDate, int duration, int seatRowsAmount, Boolean twoWay) {
         this.id = -1;
@@ -48,58 +55,128 @@ public class Flight {
         this.twoWay = twoWay;
     }
 
+    /**
+     * Returns the flight's unique identifier.
+     *
+     * @return the flight's ID
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets the flight's unique identifier.
+     *
+     * @param id the flight's ID to set
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Returns the flight's departure location.
+     *
+     * @return the departure location
+     */
     public String getDeparture() {
         return departure;
     }
 
+    /**
+     * Sets the flight's departure location.
+     *
+     * @param departure the departure location to set
+     */
     public void setDeparture(String departure) {
         this.departure = departure;
     }
 
+    /**
+     * Returns the flight's destination location.
+     *
+     * @return the destination location
+     */
     public String getDestination() {
         return destination;
     }
 
+    /**
+     * Sets the flight's destination location.
+     *
+     * @param destination the destination location to set
+     */
     public void setDestination(String destination) {
         this.destination = destination;
     }
 
+    /**
+     * Returns the flight's departure date and time.
+     *
+     * @return the departure date and time
+     */
     public LocalDateTime getDepartureDate() {
         return departureDate;
     }
 
+    /**
+     * Sets the flight's departure date and time.
+     *
+     * @param departureDate the departure date and time to set
+     */
     public void setDepartureDate(LocalDateTime departureDate) {
         this.departureDate = departureDate;
     }
 
+    /**
+     * Returns the flight's duration in minutes.
+     *
+     * @return the flight duration
+     */
     public int getDuration() {
         return duration;
     }
 
+    /**
+     * Sets the flight's duration in minutes.
+     *
+     * @param duration the flight duration to set
+     */
     public void setDuration(int duration) {
         this.duration = duration;
     }
 
+    /**
+     * Returns the number of seat rows in the flight.
+     *
+     * @return the number of seat rows
+     */
     public int getSeatRowsAmount() {
         return seatRowsAmount;
     }
 
+    /**
+     * Sets the number of seat rows in the flight.
+     *
+     * @param seatRowsAmount the number of seat rows to set
+     */
     public void setSeatRowsAmount(int seatRowsAmount) {
         this.seatRowsAmount = seatRowsAmount;
     }
 
+    /**
+     * Returns whether the flight is two-way.
+     *
+     * @return true if the flight is two-way, false otherwise
+     */
     public Boolean getTwoWay() {
         return twoWay;
     }
 
+    /**
+     * Sets whether the flight is two-way.
+     *
+     * @param twoWay true for two-way, false for one-way
+     */
     public void setTwoWay(Boolean twoWay) {
         this.twoWay = twoWay;
     }

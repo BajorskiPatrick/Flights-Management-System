@@ -10,12 +10,23 @@ import lot.models.Reservation;
 
 import java.util.List;
 
+/**
+ * Service class for handling reservation-related operations.
+ */
 public class ReservationService {
     private final ReservationDao reservationDao;
     private final FlightDao flightDao;
     private final PassengerDao passengerDao;
     private final EmailService emailService;
 
+    /**
+     * Constructs a ReservationService with the specified DAOs and services.
+     *
+     * @param rd the reservation data access object
+     * @param fd the flight data access object
+     * @param pd the passenger data access object
+     * @param emailService the email service
+     */
     public ReservationService(ReservationDao rd, FlightDao fd, PassengerDao pd, EmailService emailService) {
         this.reservationDao = rd;
         this.flightDao = fd;
@@ -23,6 +34,15 @@ public class ReservationService {
         this.emailService = emailService;
     }
 
+    /**
+     * Creates a new reservation in the system.
+     *
+     * @param flightId the ID of the flight to reserve
+     * @param passengerId the ID of the passenger making the reservation
+     * @param seatNumber the seat number to reserve
+     * @return the ID of the newly created reservation
+     * @throws ServiceException if there is a database error
+     */
     public int makeNewReservation(int flightId, int passengerId, String seatNumber) {
         try {
             Reservation reservation = new Reservation(flightId, passengerId, seatNumber);
@@ -33,6 +53,12 @@ public class ReservationService {
         }
     }
 
+    /**
+     * Retrieves all reservations from the system.
+     *
+     * @return a list of all reservations
+     * @throws ServiceException if there is a database error
+     */
     public List<Reservation> getAllReservations() {
         try {
             return reservationDao.findAll();
@@ -42,6 +68,12 @@ public class ReservationService {
         }
     }
 
+    /**
+     * Retrieves all reservation IDs from the system.
+     *
+     * @return a list of all reservation IDs
+     * @throws ServiceException if there is a database error
+     */
     public List<Integer> getIds() {
         try {
             return reservationDao.findAllId();
@@ -51,6 +83,12 @@ public class ReservationService {
         }
     }
 
+    /**
+     * Retrieves all flight IDs from the system.
+     *
+     * @return a list of all flight IDs
+     * @throws ServiceException if there is a database error
+     */
     public List<Integer> getFlightIds() {
         try {
             return flightDao.findAllId();
@@ -60,6 +98,12 @@ public class ReservationService {
         }
     }
 
+    /**
+     * Retrieves all passenger IDs from the system.
+     *
+     * @return a list of all passenger IDs
+     * @throws ServiceException if there is a database error
+     */
     public List<Integer> getPassengerIds() {
         try {
             return passengerDao.findAllId();
@@ -69,6 +113,13 @@ public class ReservationService {
         }
     }
 
+    /**
+     * Retrieves a reservation by its ID.
+     *
+     * @param reservationId the ID of the reservation to retrieve
+     * @return the reservation with the specified ID
+     * @throws ServiceException if there is a database error
+     */
     public Reservation getReservationById(int reservationId) {
         try {
             return reservationDao.findById(reservationId);
@@ -78,6 +129,13 @@ public class ReservationService {
         }
     }
 
+    /**
+     * Retrieves reservations by flight ID.
+     *
+     * @param flightId the ID of the flight to search for
+     * @return a list of reservations for the specified flight
+     * @throws ServiceException if there is a database error
+     */
     public List<Reservation> getReservationsByFlightId(int flightId) {
         try {
             return reservationDao.findAllByForeignKey("flights", flightId);
@@ -87,6 +145,13 @@ public class ReservationService {
         }
     }
 
+    /**
+     * Retrieves reservations by passenger ID.
+     *
+     * @param passengerId the ID of the passenger to search for
+     * @return a list of reservations for the specified passenger
+     * @throws ServiceException if there is a database error
+     */
     public List<Reservation> getReservationsByPassengerId(int passengerId) {
         try {
             return reservationDao.findAllByForeignKey("passengers", passengerId);
@@ -96,6 +161,13 @@ public class ReservationService {
         }
     }
 
+    /**
+     * Retrieves reservations by passenger surname.
+     *
+     * @param surname the surname to search for
+     * @return a list of reservations for passengers with the specified surname
+     * @throws ServiceException if there is a database error
+     */
     public List<Reservation> getReservationBySurname(String surname) {
         try {
             return reservationDao.findAllBySurname(surname);
@@ -105,6 +177,15 @@ public class ReservationService {
         }
     }
 
+    /**
+     * Updates an existing reservation in the system.
+     *
+     * @param reservationId the ID of the reservation to update
+     * @param flightId the new flight ID
+     * @param passengerId the new passenger ID
+     * @param seatNumber the new seat number
+     * @throws ServiceException if there is a database error
+     */
     public void updateExistingReservation(int reservationId, int flightId, int passengerId, String seatNumber) {
         try {
             Reservation reservation = new Reservation(reservationId, flightId, passengerId, seatNumber);
@@ -115,6 +196,12 @@ public class ReservationService {
         }
     }
 
+    /**
+     * Deletes a reservation from the system.
+     *
+     * @param reservationId the ID of the reservation to delete
+     * @throws ServiceException if there is a database error
+     */
     public void deleteReservation(int reservationId) {
         try {
             reservationDao.delete(reservationId);
@@ -124,6 +211,13 @@ public class ReservationService {
         }
     }
 
+    /**
+     * Retrieves available seats for a flight.
+     *
+     * @param flightId the ID of the flight to check
+     * @return a list of available seat numbers
+     * @throws ServiceException if there is a database error
+     */
     public List<String> getAvailableSeats(int flightId) {
         try {
             return flightDao.getAvailableSeatsNumbers(flightId);
@@ -133,6 +227,12 @@ public class ReservationService {
         }
     }
 
+    /**
+     * Sends a confirmation email for a reservation.
+     *
+     * @param reservationId the ID of the reservation to send confirmation for
+     * @throws EmailException if there is an error sending the email
+     */
     public void sendEmail(int reservationId) {
         try {
             Reservation reservation = reservationDao.findById(reservationId);

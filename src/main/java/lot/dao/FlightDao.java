@@ -10,7 +10,19 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Access Object for Flight entities, providing database operations.
+ */
 public class FlightDao implements GenericDao<Flight> {
+    /**
+     * Constructs a new instance of the class with default values.
+     * Initializes all fields to their default initial values.
+     */
+    public FlightDao() {}
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Flight findById(int id) throws DatabaseActionException {
         String query =
@@ -36,6 +48,13 @@ public class FlightDao implements GenericDao<Flight> {
         }
     }
 
+    /**
+     * Finds flights by departure location.
+     *
+     * @param departure the departure location to search for
+     * @return a list of flights matching the departure location
+     * @throws DatabaseActionException if a database error occurs
+     */
     public List<Flight> findByDeparture(String departure) throws DatabaseActionException {
         String query =
                 """
@@ -63,6 +82,13 @@ public class FlightDao implements GenericDao<Flight> {
         }
     }
 
+    /**
+     * Finds flights by destination location.
+     *
+     * @param destination the destination location to search for
+     * @return a list of flights matching the destination location
+     * @throws DatabaseActionException if a database error occurs
+     */
     public List<Flight> findByDestination(String destination) throws DatabaseActionException {
         String query =
                 """
@@ -90,6 +116,13 @@ public class FlightDao implements GenericDao<Flight> {
         }
     }
 
+    /**
+     * Finds flights by departure date.
+     *
+     * @param date the departure date to search for
+     * @return a list of flights matching the departure date
+     * @throws DatabaseActionException if a database error occurs
+     */
     public List<Flight> findByDate(LocalDate date) throws DatabaseActionException {
         String query =
                 """
@@ -117,7 +150,9 @@ public class FlightDao implements GenericDao<Flight> {
         }
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Flight> findAll() throws DatabaseActionException {
         List<Flight> flights = new ArrayList<>();
@@ -144,7 +179,9 @@ public class FlightDao implements GenericDao<Flight> {
         }
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int save(Flight flight) throws DatabaseActionException {
         String query =
@@ -180,6 +217,9 @@ public class FlightDao implements GenericDao<Flight> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void update(Flight flight) throws DatabaseActionException {
         String query =
@@ -207,6 +247,13 @@ public class FlightDao implements GenericDao<Flight> {
         }
     }
 
+    /**
+     * Updates a flight and handles seat adjustments.
+     *
+     * @param flight the flight to update
+     * @param previousSeatRowsAmount the previous number of seat rows
+     * @throws DatabaseActionException if a database error occurs
+     */
     public void update(Flight flight, int previousSeatRowsAmount) throws DatabaseActionException {
         String query =
                 """
@@ -235,6 +282,9 @@ public class FlightDao implements GenericDao<Flight> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void delete(int id) throws DatabaseActionException {
         String query =
@@ -254,6 +304,9 @@ public class FlightDao implements GenericDao<Flight> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Boolean existsById(int id) throws DatabaseActionException {
         String query =
@@ -277,6 +330,13 @@ public class FlightDao implements GenericDao<Flight> {
         }
     }
 
+    /**
+     * Retrieves available seat numbers for a flight.
+     *
+     * @param flightId the ID of the flight
+     * @return a list of available seat numbers
+     * @throws DatabaseActionException if a database error occurs
+     */
     public List<String> getAvailableSeatsNumbers(int flightId) throws DatabaseActionException {
         String query =
                 """
@@ -301,6 +361,12 @@ public class FlightDao implements GenericDao<Flight> {
         }
     }
 
+    /**
+     * Retrieves all flight IDs.
+     *
+     * @return a list of all flight IDs
+     * @throws DatabaseActionException if a database error occurs
+     */
     public List<Integer> findAllId() throws DatabaseActionException {
         List<Integer> ids = new ArrayList<>();
 
@@ -326,6 +392,15 @@ public class FlightDao implements GenericDao<Flight> {
         }
     }
 
+    /**
+     * Creates seats for a flight.
+     *
+     * @param conn the database connection
+     * @param flightId the ID of the flight
+     * @param initialNumber the initial seat row number
+     * @param seatRowsAmount the total number of seat rows
+     * @throws DatabaseActionException if a database error occurs
+     */
     private void createSeats(Connection conn, int flightId, int initialNumber, int seatRowsAmount) throws DatabaseActionException {
         String query =
                 """

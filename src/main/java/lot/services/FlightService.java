@@ -13,13 +13,35 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
+/**
+ * Service class for handling flight-related operations.
+ */
 public class FlightService {
     private final FlightDao flightDao;
 
+    /**
+     * Constructs a FlightService with the specified FlightDao.
+     *
+     * @param flightDao the data access object for flights
+     */
     public FlightService(FlightDao flightDao) {
         this.flightDao = flightDao;
     }
 
+    /**
+     * Adds a new flight to the system.
+     *
+     * @param departure the departure location
+     * @param destination the destination location
+     * @param departureDate the date of departure
+     * @param time the time of departure (format: HH:mm)
+     * @param duration the flight duration in minutes
+     * @param seatRowsAmount the number of seat rows
+     * @param twoWay whether the flight is two-way
+     * @return the ID of the newly created flight
+     * @throws ValidationException if the input data is invalid
+     * @throws ServiceException if there is a database error
+     */
     public int addNewFlight(String departure, String destination, LocalDate departureDate, String time, int duration, int seatRowsAmount, Boolean twoWay) {
         validateData(departureDate, time, duration, seatRowsAmount);
         LocalTime t = LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
@@ -34,6 +56,12 @@ public class FlightService {
         }
     }
 
+    /**
+     * Retrieves all flights from the system.
+     *
+     * @return a list of all flights
+     * @throws ServiceException if there is a database error
+     */
     public List<Flight> getAllFlights() {
         try {
             return flightDao.findAll();
@@ -43,6 +71,13 @@ public class FlightService {
         }
     }
 
+    /**
+     * Retrieves a flight by its ID.
+     *
+     * @param flightId the ID of the flight to retrieve
+     * @return the flight with the specified ID
+     * @throws ServiceException if there is a database error
+     */
     public Flight getFlightById(int flightId) {
         try {
             return flightDao.findById(flightId);
@@ -52,6 +87,13 @@ public class FlightService {
         }
     }
 
+    /**
+     * Retrieves flights by departure location.
+     *
+     * @param departure the departure location to search for
+     * @return a list of flights matching the departure location
+     * @throws ServiceException if there is a database error
+     */
     public List<Flight> getFlightByDeparture(String departure) {
         try {
             return flightDao.findByDeparture(departure);
@@ -61,6 +103,13 @@ public class FlightService {
         }
     }
 
+    /**
+     * Retrieves flights by destination location.
+     *
+     * @param destination the destination location to search for
+     * @return a list of flights matching the destination location
+     * @throws ServiceException if there is a database error
+     */
     public List<Flight> getFlightByDestination(String destination) {
         try {
             return flightDao.findByDestination(destination);
@@ -70,6 +119,13 @@ public class FlightService {
         }
     }
 
+    /**
+     * Retrieves flights by departure date.
+     *
+     * @param date the date to search for
+     * @return a list of flights matching the departure date
+     * @throws ServiceException if there is a database error
+     */
     public List<Flight> getFlightByDate(LocalDate date) {
         try {
             return flightDao.findByDate(date);
@@ -79,6 +135,12 @@ public class FlightService {
         }
     }
 
+    /**
+     * Retrieves all flight IDs from the system.
+     *
+     * @return a list of all flight IDs
+     * @throws ServiceException if there is a database error
+     */
     public List<Integer> getIds() {
         try {
             return flightDao.findAllId();
@@ -88,6 +150,20 @@ public class FlightService {
         }
     }
 
+    /**
+     * Updates an existing flight in the system.
+     *
+     * @param flightId the ID of the flight to update
+     * @param departure the new departure location
+     * @param destination the new destination location
+     * @param departureDate the new departure date
+     * @param time the new departure time (format: HH:mm)
+     * @param duration the new flight duration
+     * @param seatRowsAmount the new number of seat rows
+     * @param twoWay whether the flight is two-way
+     * @throws ValidationException if the input data is invalid
+     * @throws ServiceException if there is a database error
+     */
     public void updateExistingFlight(int flightId, String departure, String destination, LocalDate departureDate, String time, int duration, int seatRowsAmount, Boolean twoWay) {
         Flight flight = getFlightById(flightId);
 
@@ -113,6 +189,12 @@ public class FlightService {
         }
     }
 
+    /**
+     * Deletes a flight from the system.
+     *
+     * @param flightId the ID of the flight to delete
+     * @throws ServiceException if there is a database error
+     */
     public void deleteFlight(int flightId) {
         try {
             flightDao.delete(flightId);
@@ -122,6 +204,15 @@ public class FlightService {
         }
     }
 
+    /**
+     * Validates flight data before processing.
+     *
+     * @param date the departure date
+     * @param time the departure time
+     * @param duration the flight duration
+     * @param seatRowsAmount the number of seat rows
+     * @throws ValidationException if any of the data is invalid
+     */
     private void validateData(LocalDate date, String time, int duration, int seatRowsAmount) {
         LocalTime t;
         try {
