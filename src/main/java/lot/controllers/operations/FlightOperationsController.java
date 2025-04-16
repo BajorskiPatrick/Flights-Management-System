@@ -13,7 +13,7 @@ import lot.exceptions.services.ServiceException;
 import lot.exceptions.services.ValidationException;
 import lot.models.Flight;
 import lot.services.FlightService;
-import lot.utils.ControllerUtils;
+import lot.controllers.utils.ControllerUtils;
 
 import java.io.IOException;
 import java.time.LocalDate;

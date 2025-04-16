@@ -77,9 +77,13 @@ public class FlightService {
      * @param flightId the ID of the flight to retrieve
      * @return the flight with the specified ID
      * @throws ServiceException if there is a database error
+     * @throws ValidationException if there is a validation error
      */
     public Flight getFlightById(int flightId) {
         try {
+            if (!flightDao.existsById(flightId)) {
+                throw new ValidationException("Flight with id: " + flightId + " does not exists in the database");
+            }
             return flightDao.findById(flightId);
         }
         catch (DatabaseActionException e) {
@@ -194,9 +198,13 @@ public class FlightService {
      *
      * @param flightId the ID of the flight to delete
      * @throws ServiceException if there is a database error
+     * @throws ValidationException if there is a validation error
      */
     public void deleteFlight(int flightId) {
         try {
+            if (!flightDao.existsById(flightId)) {
+                throw new ValidationException("Flight with id: " + flightId  + " can not be deleted, because it does not exists in the database");
+            }
             flightDao.delete(flightId);
         }
         catch (DatabaseActionException e) {

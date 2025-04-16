@@ -2,6 +2,9 @@ package lot.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.jetbrains.annotations.TestOnly;
+
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -12,9 +15,19 @@ import java.sql.*;
  * Uses HikariCP for connection pooling and handles database schema initialization.
  */
 public class DatabaseInitializer {
-    private static final HikariDataSource dataSource;
+    private static DataSource dataSource;
 
     static {
+        configureDefault();
+    }
+
+    /**
+     * Constructs a new instance of the class with default values.
+     * Initializes all fields to their default initial values.
+     */
+    public DatabaseInitializer() {}
+
+    private static void configureDefault() {
         String dbUrl = "jdbc:h2:./lotdb;AUTO_SERVER=TRUE;DB_CLOSE_DELAY=-1";
         String dbUser = "sa";
         String dbPass = "";
@@ -28,10 +41,22 @@ public class DatabaseInitializer {
     }
 
     /**
-     * Constructs a new instance of the class with default values.
-     * Initializes all fields to their default initial values.
+     * Sets dataSource field to provided DataSource object
+     *
+     * @param ds DataSource object to set dataSource field to
      */
-    public DatabaseInitializer() {}
+    @TestOnly
+    public static void overrideDataSource(DataSource ds) {
+        dataSource = ds;
+    }
+
+    /**
+     * Resets dataSource field to its default value
+     */
+    @TestOnly
+    public static void resetToDefault() {
+        configureDefault();
+    }
 
     /**
      * Initializes the database by executing schema and data scripts.

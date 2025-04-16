@@ -13,7 +13,7 @@ import lot.exceptions.services.EmailException;
 import lot.exceptions.services.ServiceException;
 import lot.models.Reservation;
 import lot.services.ReservationService;
-import lot.utils.ControllerUtils;
+import lot.controllers.utils.ControllerUtils;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

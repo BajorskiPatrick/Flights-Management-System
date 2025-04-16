@@ -1,6 +1,7 @@
 package lot.controllers;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -29,7 +30,8 @@ public class MainAppController {
      *
      * @param event the action event that triggered this navigation
      */
-    public void manageFlights(ActionEvent event) {
+    @FXML
+    private void manageFlights(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/lot/views/menu/MenuView.fxml"));
         try {
             setStage(event, loader, "flight");
@@ -46,7 +48,8 @@ public class MainAppController {
      *
      * @param event the action event that triggered this navigation
      */
-    public void manageReservations(ActionEvent event) {
+    @FXML
+    private void manageReservations(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/lot/views/menu/MenuView.fxml"));
         try {
             setStage(event, loader, "reservation");
@@ -63,7 +66,8 @@ public class MainAppController {
      *
      * @param event the action event that triggered this navigation
      */
-    public void managePassengers(ActionEvent event) {
+    @FXML
+    private void managePassengers(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/lot/views/menu/MenuView.fxml"));
         try {
             setStage(event, loader, "passenger");

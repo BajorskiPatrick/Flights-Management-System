@@ -28,9 +28,9 @@ public interface GenericDao<T> {
     List<T> findAll() throws DatabaseActionException;
 
     /**
-     * Retrieves all objects IDs.
+     * Retrieves all entities IDs.
      *
-     * @return a list of all objects IDs
+     * @return a list of all entities IDs
      * @throws DatabaseActionException if a database error occurs
      */
     List<Integer> findAllId() throws DatabaseActionException;
@@ -59,4 +59,13 @@ public interface GenericDao<T> {
      * @throws DatabaseActionException if a database error occurs
      */
     void delete(int id) throws DatabaseActionException;
+
+    /**
+     * Checks if an entity with provided ID exists in the database
+     *
+     * @param id the ID to check
+     * @return true if entity with id exists, false otherwise
+     * @throws DatabaseActionException if a database error occurs
+     */
+    Boolean existsById(int id) throws DatabaseActionException;
 }

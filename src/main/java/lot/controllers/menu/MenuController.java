@@ -20,7 +20,7 @@ import lot.services.EmailService;
 import lot.services.FlightService;
 import lot.services.PassengerService;
 import lot.services.ReservationService;
-import lot.utils.ControllerUtils;
+import lot.controllers.utils.ControllerUtils;
 
 import java.io.IOException;
 

@@ -3,7 +3,7 @@ package lot.dao;
 import lot.database.DatabaseInitializer;
 import lot.exceptions.dao.DatabaseActionException;
 import lot.models.Flight;
-import lot.utils.ResultSetMapper;
+import lot.dao.utils.ResultSetMapper;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -361,6 +361,32 @@ public class FlightDao implements GenericDao<Flight> {
         }
         catch (SQLException e) {
             throw new DatabaseActionException("Database error while fetching all flights details", e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Boolean existsById(int id) throws DatabaseActionException {
+        String query =
+                """
+                SELECT 1
+                FROM flights f
+                WHERE f.id = ?
+                """;
+        try (
+                Connection conn = DatabaseInitializer.getConnection();
+                PreparedStatement ps = conn.prepareStatement(query)
+        ) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            Boolean res = rs.next();
+            rs.close();
+            return res;
+        }
+        catch (SQLException e) {
+            throw new DatabaseActionException("Database error while checking if flight exists", e);
         }
     }
 

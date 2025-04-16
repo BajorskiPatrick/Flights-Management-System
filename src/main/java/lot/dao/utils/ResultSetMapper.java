@@ -1,4 +1,4 @@
-package lot.utils;
+package lot.dao.utils;
 
 import lot.models.Flight;
 import lot.models.Passenger;

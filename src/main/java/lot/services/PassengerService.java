@@ -124,6 +124,9 @@ public class PassengerService {
         validateData(email, phoneNumber);
         Passenger passenger = new Passenger(passengerId, name, surname, email, phoneNumber);
         try {
+            if (!passengerDao.existsById(passengerId)) {
+                throw new ValidationException("Passenger with id: " + passengerId + " can not be updated, because it does not exist in the database");
+            }
             passengerDao.update(passenger);
         }
         catch (DatabaseActionException e) {
@@ -136,9 +139,13 @@ public class PassengerService {
      *
      * @param passengerId the ID of the passenger to delete
      * @throws ServiceException if there is a database error
+     * @throws ValidationException if there is a validation error
      */
     public void deletePassenger(int passengerId) {
         try {
+            if (!passengerDao.existsById(passengerId)) {
+                throw new ValidationException("Passenger with id: " + passengerId + " can not be updated, because it does not exist in the database");
+            }
             passengerDao.delete(passengerId);
         }
         catch (DatabaseActionException e) {

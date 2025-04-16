@@ -1,4 +1,4 @@
-package lot.utils;
+package lot.controllers.utils;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
