@@ -305,32 +305,6 @@ public class FlightDao implements GenericDao<Flight> {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Boolean existsById(int id) throws DatabaseActionException {
-        String query =
-                """
-                SELECT 1
-                FROM flights f
-                WHERE f.id = ?
-                """;
-        try (
-                Connection conn = DatabaseInitializer.getConnection();
-                PreparedStatement ps = conn.prepareStatement(query)
-        ) {
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            Boolean res = rs.next();
-            rs.close();
-            return res;
-        }
-        catch (SQLException e) {
-            throw new DatabaseActionException("Database error while checking if flight exists", e);
-        }
-    }
-
-    /**
      * Retrieves available seat numbers for a flight.
      *
      * @param flightId the ID of the flight
@@ -362,11 +336,9 @@ public class FlightDao implements GenericDao<Flight> {
     }
 
     /**
-     * Retrieves all flight IDs.
-     *
-     * @return a list of all flight IDs
-     * @throws DatabaseActionException if a database error occurs
+     * {@inheritDoc}
      */
+    @Override
     public List<Integer> findAllId() throws DatabaseActionException {
         List<Integer> ids = new ArrayList<>();
 
@@ -414,7 +386,7 @@ public class FlightDao implements GenericDao<Flight> {
                 for (int j = 0; j < 6; j++) {
                     try (PreparedStatement ps = conn.prepareStatement(query)) {
                         ps.setInt(1, flightId);
-                        ps.setString(2, String.valueOf(i) + letters[j]);
+                        ps.setString(2, i + letters[j]);
                         ps.setBoolean(3, true);
                         ps.executeUpdate();
                     }

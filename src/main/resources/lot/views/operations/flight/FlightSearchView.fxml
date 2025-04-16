@@ -32,7 +32,7 @@
     </TableView>
     <Button fx:id="backButton" layoutX="31.0" layoutY="445.0" mnemonicParsing="false" onAction="#goBack" text="Go back" />
    <Button fx:id="searchButton" layoutX="370.0" layoutY="165.0" mnemonicParsing="false" prefHeight="25.0" onAction="#performSearchByCriteria" text="Search" />
-   <DatePicker fx:id="dateSearchField" layoutX="313.0" layoutY="111.0" prefHeight="25.0" prefWidth="174.0" promptText="Select date" visible="false" />
+   <DatePicker fx:id="dateSearchField" editable="false" layoutX="313.0" layoutY="111.0" prefHeight="25.0" prefWidth="174.0" promptText="Select date" visible="false" />
    <TextField fx:id="destinationSearchField" layoutX="313.0" layoutY="112.0" prefHeight="25.0" prefWidth="174.0" promptText="Enter destination" visible="false" />
     <TextField fx:id="departureSearchField" layoutX="313.0" layoutY="112.0" prefHeight="25.0" prefWidth="174.0" promptText="Enter departure" visible="false" />
    <ComboBox fx:id="idSearchField" layoutX="313.0" layoutY="112.0" prefHeight="25.0" prefWidth="174.0" promptText="Select ID" visible="false" />

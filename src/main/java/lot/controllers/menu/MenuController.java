@@ -20,6 +20,7 @@ import lot.services.EmailService;
 import lot.services.FlightService;
 import lot.services.PassengerService;
 import lot.services.ReservationService;
+import lot.utils.ControllerUtils;
 
 import java.io.IOException;
 
@@ -43,8 +44,6 @@ public class MenuController {
     private Button deleteButton;
 
     private Stage stage;
-    private Scene scene;
-    private Parent root;
     private String resourceType;
     private final FlightService flightService = new FlightService(new FlightDao());
     private final ReservationService reservationService = new ReservationService(new ReservationDao(), new FlightDao(), new PassengerDao(), new EmailService());
@@ -242,13 +241,13 @@ public class MenuController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/lot/views/operations/" + resourceType + "/" + resourceType.substring(0, 1).toUpperCase() + resourceType.substring(1) + view + ".fxml"));
         loader.setControllerFactory(type -> {
             if (type == FlightOperationsController.class) {
-                return new FlightOperationsController(flightService);
+                return new FlightOperationsController(flightService, new ControllerUtils());
             }
             else if (type == ReservationOperationsController.class) {
-                return new ReservationOperationsController(reservationService);
+                return new ReservationOperationsController(reservationService, new ControllerUtils());
             }
             else if (type == PassengerOperationsController.class) {
-                return new PassengerOperationsController(passengerService);
+                return new PassengerOperationsController(passengerService, new ControllerUtils());
             }
 
             try {
@@ -268,9 +267,9 @@ public class MenuController {
      * @param cssName the name of the CSS file to apply
      */
     private void setStage(ActionEvent event, FXMLLoader loader, String cssName) throws IOException {
-        root = loader.load();
+        Parent root = loader.load();
         stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
+        Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/lot/css/" + cssName).toExternalForm());
         stage.setScene(scene);
     }

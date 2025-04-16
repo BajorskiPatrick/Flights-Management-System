@@ -163,7 +163,7 @@ AnchorPane {
 }
 
 .combo-box .text-input {
-    -fx-text-fill: white;
+    -fx-text-fill: black;
     -fx-font-weight: bold;
 }
 
@@ -190,7 +190,7 @@ AnchorPane {
 }
 
 .combo-box .prompt-text {
-    -fx-text-fill: rgba(255,255,255,0.7);
+    -fx-text-fill: black;
     -fx-font-style: italic;
 }
 
@@ -202,4 +202,48 @@ AnchorPane {
 
 .date-picker .text-field {
     -fx-border-radius: 0px;
+}
+
+.date-picker-popup {
+    -fx-background-color: white;
+    -fx-border-color: #4682B4;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 1);
+}
+
+.date-picker-popup > * > .month-year-pane {
+    -fx-pref-height: 35px;
+}
+
+.date-picker-popup > * > .calendar-grid {
+    -fx-pref-width: 180px;
+    -fx-pref-height: 130px;
+}
+
+.date-picker-popup .day-cell {
+    -fx-pref-width: 25px;
+    -fx-pref-height: 25px;
+    -fx-alignment: CENTER;
+    -fx-font-size: 12px;
+}
+
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: #E6F2FF;
+}
+
+.date-picker-popup .day-cell:selected {
+    -fx-background-color: #4682B4;
+    -fx-text-fill: white;
+}
+
+.date-picker-popup .previous-month,
+.date-picker-popup .next-month {
+    -fx-background-color: transparent;
+    -fx-padding: 3px;
+}
+
+.date-picker-popup .previous-month:hover,
+.date-picker-popup .next-month:hover {
+    -fx-background-color: #F0F0F0;
 }

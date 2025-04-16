@@ -17,8 +17,6 @@ import java.io.IOException;
  */
 public class MainAppController {
     private Stage stage;
-    private Scene scene;
-    private Parent root;
 
     /**
      * Constructs a new instance of the class with default values.
@@ -89,9 +87,9 @@ public class MainAppController {
      * @param event the action event that triggered this navigation
      */
     private void setStage(ActionEvent event, FXMLLoader loader) throws IOException {
-        root = loader.load();
+        Parent root = loader.load();
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
+        Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/lot/css/Menu.css").toExternalForm());
         stage.setScene(scene);
     }

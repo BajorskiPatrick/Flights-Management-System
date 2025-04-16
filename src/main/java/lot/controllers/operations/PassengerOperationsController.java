@@ -3,31 +3,28 @@ package lot.controllers.operations;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import lot.controllers.menu.MenuController;
+import javafx.event.ActionEvent;
+
 import lot.exceptions.services.ServiceException;
 import lot.exceptions.services.ValidationException;
 import lot.models.Passenger;
 import lot.services.PassengerService;
+import lot.utils.ControllerUtils;
 
-import javafx.event.ActionEvent;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Controller for handling passenger-related operations in the UI.
  * Manages the display, search, addition, update, and deletion of passengers.
  */
 public class PassengerOperationsController {
+    @FXML
+    private AnchorPane searchPane;
     @FXML
     private ComboBox<Integer> idSearchField;
     @FXML
@@ -81,19 +78,20 @@ public class PassengerOperationsController {
     @FXML
     private ComboBox<Integer> idToUpdateSelectorBox;
 
-    private ObservableList<Integer> ids = FXCollections.observableArrayList();
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
+    private final ObservableList<Integer> ids = FXCollections.observableArrayList();
     private final PassengerService passengerService;
+    private final ControllerUtils utils;
+
 
     /**
      * Constructs a PassengerOperationsController with the specified PassengerService.
      *
      * @param passengerService the service to handle passenger operations
+     * @param utils the utils to handle management operations
      */
-    public PassengerOperationsController(PassengerService passengerService) {
+    public PassengerOperationsController(PassengerService passengerService, ControllerUtils utils) {
         this.passengerService = passengerService;
+        this.utils = utils;
     }
 
     /**
@@ -116,7 +114,7 @@ public class PassengerOperationsController {
      * @param type the type of operation ("delete" or "update")
      */
     public void configurePassengersIds(String type) {
-        ids.addAll(passengerService.getIds().stream().sorted().collect(Collectors.toList()));
+        ids.addAll(passengerService.getIds().stream().sorted().toList());
         if (type.equals("delete")) {
             deleteId.getItems().addAll(ids);
             deleteId.setOnAction(this::changeDeletionLabel);
@@ -138,7 +136,7 @@ public class PassengerOperationsController {
             ObservableList<Passenger> flightObservableList = FXCollections.observableArrayList(passengers);
             passengerTable.setItems(flightObservableList);
         } catch (ServiceException e) {
-            showApplicationErrorMessage(e.getMessage());
+            utils.showApplicationErrorMessage(e.getMessage());
         }
     }
 
@@ -158,14 +156,14 @@ public class PassengerOperationsController {
                 surnameSearchField.setVisible(false);
                 idSearchField.setVisible(true);
                 ids.clear();
-                ids.addAll(passengerService.getIds().stream().sorted().collect(Collectors.toList()));
+                ids.addAll(passengerService.getIds().stream().sorted().toList());
                 idSearchField.setItems(ids);
                 idSearchField.setVisibleRowCount(5);
-                idSearchField.setPromptText("Select ID");
                 break;
             case "buttonSurnameSearch":
                 surnameSearchField.setVisible(true);
                 idSearchField.setVisible(false);
+                idSearchField = utils.clearComboBox(searchPane, idSearchField);
                 break;
         }
     }
@@ -196,7 +194,7 @@ public class PassengerOperationsController {
             }
         }
         catch (ServiceException e) {
-            showApplicationErrorMessage(e.getMessage());
+            utils.showApplicationErrorMessage(e.getMessage());
         }
     }
 
@@ -223,12 +221,13 @@ public class PassengerOperationsController {
                 passengerService.deletePassenger(choice);
             }
             catch (ServiceException e) {
-                showApplicationErrorMessage(e.getMessage());
+                utils.showApplicationErrorMessage(e.getMessage());
             }
             ids.remove(choice);
             deleteId.setItems(ids);
         }
-        clearForm(deletionPane, "Select id for deletion");
+        utils.clearForm(deletionPane, "Select id for deletion");
+        deleteId = utils.clearComboBox(deletionPane, deleteId);
     }
 
     /**
@@ -254,14 +253,14 @@ public class PassengerOperationsController {
             id = passengerService.addNewPassenger(name, surname, email, phoneNumber);
         }
         catch (ValidationException e) {
-            showDataErrorMessage(e.getMessage());
+            utils.showDataValidationErrorMessage(e.getMessage());
             addLabel.setText("Type new passenger data");
             addLabel.setTextFill(Color.BLACK);
             return;
         }
         catch (ServiceException e) {
-            showApplicationErrorMessage(e.getMessage());
-            clearForm(addPane, "Type new passenger data");
+            utils.showApplicationErrorMessage(e.getMessage());
+            utils.clearForm(addPane, "Type new passenger data");
             return;
         }
 
@@ -270,7 +269,7 @@ public class PassengerOperationsController {
         alert.setHeaderText("Passenger with id: " + id  + " has been added successfully");
         alert.showAndWait();
 
-        clearForm(addPane, "Type new passenger data");
+        utils.clearForm(addPane, "Type new passenger data");
     }
 
     /**
@@ -296,14 +295,14 @@ public class PassengerOperationsController {
             passengerService.updateExistingPassenger(id, name, surname, email, phoneNumber);
         }
         catch (ValidationException e) {
-            showDataErrorMessage(e.getMessage());
+            utils.showDataValidationErrorMessage(e.getMessage());
             updateLabel.setText("Provide updated data (first, on the left, select which to update)");
             updateLabel.setTextFill(Color.BLACK);
             return;
         }
         catch (ServiceException e) {
-            showApplicationErrorMessage(e.getMessage());
-            clearForm(updatePane, "Provide updated data (first, on the left, select which to update)");
+            utils.showApplicationErrorMessage(e.getMessage());
+            utils.clearForm(updatePane, "Provide updated data (first, on the left, select which to update)");
         }
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -311,7 +310,8 @@ public class PassengerOperationsController {
         alert.setHeaderText("Passenger with id: " + id  + " has been updated successfully");
         alert.showAndWait();
 
-        clearForm(updatePane, "Provide updated data (first, on the left, select which to update)");
+        utils.clearForm(updatePane, "Provide updated data (first, on the left, select which to update)");
+        idToUpdateSelectorBox = utils.clearComboBox(updatePane, idToUpdateSelectorBox);
     }
 
     /**
@@ -333,23 +333,11 @@ public class PassengerOperationsController {
     @FXML
     private void goBack(ActionEvent event) {
         try {
-            loadView("/lot/views/menu/MenuView.fxml", event);
+            utils.loadView("/lot/views/menu/MenuView.fxml", event, "passenger");
         }
         catch (IOException e) {
-            showApplicationErrorMessage("Failed to load MenuView. " + e.getMessage());
+            utils.showApplicationErrorMessage("Failed to load MenuView. " + e.getMessage());
         }
-    }
-
-    private void loadView(String viewPath, ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));
-        root = loader.load();
-        MenuController controller = loader.getController();
-        controller.setResourceType("passenger");
-        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/lot/css/Menu.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
     }
 
     private void loadSelectedPassengerDetails(ActionEvent event) {
@@ -362,8 +350,8 @@ public class PassengerOperationsController {
             passenger = passengerService.getPassengerById(id);
         }
         catch (ServiceException e) {
-            showApplicationErrorMessage(e.getMessage());
-            clearForm(updatePane, "Provide updated data (first, on the left, select which to update)");
+            utils.showApplicationErrorMessage(e.getMessage());
+            utils.clearForm(updatePane, "Provide updated data (first, on the left, select which to update)");
             return;
         }
 
@@ -371,38 +359,5 @@ public class PassengerOperationsController {
         updateSurnameField.setText(passenger.getSurname());
         updateEmailField.setText(passenger.getEmail());
         updatePhoneNumberField.setText(passenger.getPhoneNumber());
-    }
-
-    private void showApplicationErrorMessage(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Application exception");
-        alert.setHeaderText("Unexpected exception has occurred");
-        alert.setContentText("Details: " + message);
-        alert.showAndWait();
-    }
-
-    private void showDataErrorMessage(String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Data exception");
-        alert.setHeaderText("Exception related to provided data has occurred");
-        alert.setContentText("Details: " + message);
-        alert.showAndWait();
-    }
-
-    private void clearForm(AnchorPane anchorPane, String label) {
-        for (javafx.scene.Node node : anchorPane.getChildren()) {
-            if (node instanceof TextField) {
-                ((TextField) node).clear();
-            } else if (node instanceof DatePicker) {
-                ((DatePicker) node).setValue(null);
-            } else if (node instanceof CheckBox) {
-                ((CheckBox) node).setSelected(false);
-            } else if (node instanceof ComboBox) {
-                ((ComboBox<?>) node).getSelectionModel().clearSelection();
-            } else if (node instanceof Label) {
-                ((Label) node).setText(label);
-                ((Label) node).setTextFill(Color.BLACK);
-            }
-        }
     }
 }

@@ -56,7 +56,7 @@ public class EmailService {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(USERNAME));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-            message.setSubject("Flight reservation confirmation");
+            message.setSubject("Flight's reservation confirmation");
             message.setText("Thank you for reservation!\n\n" +
                     "Below you can find details of your reservation:\n\n" +
                     reservationDetails);

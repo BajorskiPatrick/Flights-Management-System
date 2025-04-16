@@ -117,7 +117,7 @@ public class PassengerDao implements GenericDao<Passenger> {
     public int save(Passenger passenger) throws DatabaseActionException {
         String query =
                 """
-                INSERT INTO passengers (name, surname, email, phoneNumber) VALUES 
+                INSERT INTO passengers (name, surname, email, phoneNumber) VALUES
                 (?, ?, ?, ?)
                 """;
         try (
@@ -200,34 +200,6 @@ public class PassengerDao implements GenericDao<Passenger> {
      * {@inheritDoc}
      */
     @Override
-    public Boolean existsById(int id) throws DatabaseActionException {
-        String query =
-                """
-                SELECT 1
-                FROM passengers p
-                WHERE p.id = ?
-                """;
-        try (
-                Connection conn = DatabaseInitializer.getConnection();
-                PreparedStatement ps = conn.prepareStatement(query)
-        ) {
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            Boolean res = rs.next();
-            rs.close();
-            return res;
-        }
-        catch (SQLException e) {
-            throw new DatabaseActionException("Database error while checking if passenger exists", e);
-        }
-    }
-
-    /**
-     * Retrieves all passenger IDs.
-     *
-     * @return a list of all passenger IDs
-     * @throws DatabaseActionException if a database error occurs
-     */
     public List<Integer> findAllId() throws DatabaseActionException {
         List<Integer> ids = new ArrayList<>();
 

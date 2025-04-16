@@ -1,29 +1,25 @@
 package lot.controllers.operations;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import lot.controllers.menu.MenuController;
+import javafx.event.ActionEvent;
+
 import lot.exceptions.services.ServiceException;
 import lot.exceptions.services.ValidationException;
 import lot.models.Flight;
 import lot.services.FlightService;
+import lot.utils.ControllerUtils;
 
-import javafx.event.ActionEvent;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Controller for handling flight-related operations in the UI.
@@ -105,19 +101,19 @@ public class FlightOperationsController {
     @FXML
     private AnchorPane addPane;
 
-    private ObservableList<Integer> ids = FXCollections.observableArrayList();
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
+    private final ObservableList<Integer> ids = FXCollections.observableArrayList();
     private final FlightService flightService;
+    private final ControllerUtils utils;
 
     /**
      * Constructs a FlightOperationsController with the specified FlightService.
      *
      * @param flightService the service to handle flight operations
+     * @param utils the utils to handle management operations
      */
-    public FlightOperationsController(FlightService flightService) {
+    public FlightOperationsController(FlightService flightService, ControllerUtils utils) {
         this.flightService = flightService;
+        this.utils = utils;
     }
 
     /**
@@ -130,6 +126,20 @@ public class FlightOperationsController {
             departureColumn.setCellValueFactory(new PropertyValueFactory<>("departure"));
             destinationColumn.setCellValueFactory(new PropertyValueFactory<>("destination"));
             departureDateColumn.setCellValueFactory(new PropertyValueFactory<>("departureDate"));
+            departureDateColumn.setCellFactory(column -> new TableCell<>() {
+                private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+                @Override
+                protected void updateItem(LocalDateTime item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setText(null);
+                    } else {
+                        setText(formatter.format(item));
+                    }
+                }
+            });
+
             durationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
             seatRowsAmountColumn.setCellValueFactory(new PropertyValueFactory<>("seatRowsAmount"));
             twoWayColumn.setCellValueFactory(new PropertyValueFactory<>("twoWay"));
@@ -143,7 +153,7 @@ public class FlightOperationsController {
      */
     public void configureFlightsIds(String type) {
         ids.clear();
-        ids.addAll(flightService.getIds().stream().sorted().collect(Collectors.toList()));
+        ids.addAll(flightService.getIds().stream().sorted().toList());
 
         if (type.equals("delete")) {
             deleteId.getItems().addAll(ids);
@@ -166,7 +176,7 @@ public class FlightOperationsController {
             ObservableList<Flight> flightObservableList = FXCollections.observableArrayList(flights);
             flightTable.setItems(flightObservableList);
         } catch (ServiceException e) {
-            showApplicationErrorMessage(e.getMessage());
+            utils.showApplicationErrorMessage(e.getMessage());
         }
     }
 
@@ -181,30 +191,39 @@ public class FlightOperationsController {
         String id = button.getId();
         switch (id) {
             case "buttonIdSearch":
-                destinationSearchField.clear();
-                departureSearchField.clear();
-
                 dateSearchField.setVisible(false);
                 destinationSearchField.setVisible(false);
                 departureSearchField.setVisible(false);
                 idSearchField.setVisible(true);
+
+                destinationSearchField.clear();
+                departureSearchField.clear();
+                dateSearchField.setValue(null);
+
                 ids.clear();
-                ids.addAll(flightService.getIds().stream().sorted().collect(Collectors.toList()));
+                ids.addAll(flightService.getIds().stream().sorted().toList());
                 idSearchField.setItems(ids);
                 idSearchField.setVisibleRowCount(5);
-                idSearchField.setPromptText("Select ID");
                 break;
             case "buttonDepartureSearch":
                 dateSearchField.setVisible(false);
                 destinationSearchField.setVisible(false);
                 departureSearchField.setVisible(true);
                 idSearchField.setVisible(false);
+
+                destinationSearchField.clear();
+                dateSearchField.setValue(null);
+                idSearchField = utils.clearComboBox(searchPane, idSearchField);
                 break;
             case "buttonDestinationSearch":
                 dateSearchField.setVisible(false);
                 destinationSearchField.setVisible(true);
                 departureSearchField.setVisible(false);
                 idSearchField.setVisible(false);
+
+                departureSearchField.clear();
+                dateSearchField.setValue(null);
+                idSearchField = utils.clearComboBox(searchPane, idSearchField);
                 break;
             case "buttonDateSearch":
                 destinationSearchField.clear();
@@ -214,6 +233,10 @@ public class FlightOperationsController {
                 destinationSearchField.setVisible(false);
                 departureSearchField.setVisible(false);
                 idSearchField.setVisible(false);
+
+                destinationSearchField.clear();
+                departureSearchField.clear();
+                idSearchField = utils.clearComboBox(searchPane, idSearchField);
                 break;
         }
     }
@@ -260,8 +283,7 @@ public class FlightOperationsController {
             }
         }
         catch (ServiceException e) {
-            showApplicationErrorMessage(e.getMessage());
-            e.printStackTrace();
+            utils.showApplicationErrorMessage(e.getMessage());
         }
     }
 
@@ -289,12 +311,13 @@ public class FlightOperationsController {
                 flightService.deleteFlight(choice);
             }
             catch (ServiceException e) {
-                showApplicationErrorMessage(e.getMessage());
+                utils.showApplicationErrorMessage(e.getMessage());
             }
             ids.remove(choice);
             deleteId.setItems(ids);
         }
-        clearForm(deletionPane, "Select id for deletion");
+        utils.clearForm(deletionPane, "Select id for deletion");
+        deleteId = utils.clearComboBox(deletionPane, deleteId);
     }
 
     /**
@@ -324,18 +347,18 @@ public class FlightOperationsController {
             durationNum = Integer.parseInt(duration);
         }
         catch (NumberFormatException e) {
-            addLabel.setText("Duration must be a number!");
-            updateLabel.setTextFill(Color.RED);
-            durationField.clear();
+            utils.showDataValidationErrorMessage("Duration must be a number!");
+            addLabel.setText("Type new flight data");
+            addLabel.setTextFill(Color.BLACK);
             return;
         }
         try {
             seatNum = Integer.parseInt(seatRowsAmount);
         }
         catch (NumberFormatException e) {
-            addLabel.setText("Seat rows must be a number!");
-            updateLabel.setTextFill(Color.RED);
-            seatRowsAmountField.clear();
+            utils.showDataValidationErrorMessage("Seat rows must be a number!");
+            addLabel.setText("Type new flight data");
+            addLabel.setTextFill(Color.BLACK);
             return;
         }
 
@@ -344,14 +367,14 @@ public class FlightOperationsController {
             id = flightService.addNewFlight(departure, destination, departureDate, time, durationNum, seatNum, twoWay);
         }
         catch (ValidationException e) {
-            showDataErrorMessage(e.getMessage());
+            utils.showDataValidationErrorMessage(e.getMessage());
             addLabel.setText("Type new flight data");
             addLabel.setTextFill(Color.BLACK);
             return;
         }
         catch (ServiceException e) {
-            showApplicationErrorMessage(e.getMessage());
-            clearForm(addPane, "Type new flight data");
+            utils.showApplicationErrorMessage(e.getMessage());
+            utils.clearForm(addPane, "Type new flight data");
             return;
         }
 
@@ -360,7 +383,7 @@ public class FlightOperationsController {
         alert.setHeaderText("Flight with id: " + id  + " has been added successfully");
         alert.showAndWait();
 
-        clearForm(addPane, "Type new flight data");
+        utils.clearForm(addPane, "Type new flight data");
     }
 
     /**
@@ -391,18 +414,18 @@ public class FlightOperationsController {
             durationNum = Integer.parseInt(duration);
         }
         catch (NumberFormatException e) {
-            updateLabel.setText("Duration must be a number!");
-            updateLabel.setTextFill(Color.RED);
-            updateDurationField.clear();
+            utils.showDataValidationErrorMessage("Duration must be a number!");
+            updateLabel.setText("Provide updated data (first, on the left, select which to update)");
+            updateLabel.setTextFill(Color.BLACK);
             return;
         }
         try {
             seatNum = Integer.parseInt(seatRowsAmount);
         }
         catch (NumberFormatException e) {
-            updateLabel.setText("Seat rows must be a number!");
-            updateLabel.setTextFill(Color.RED);
-            updateSeatRowsAmountField.clear();
+            utils.showDataValidationErrorMessage("Seat rows must be a number!");
+            updateLabel.setText("Provide updated data (first, on the left, select which to update)");
+            updateLabel.setTextFill(Color.BLACK);
             return;
         }
 
@@ -410,14 +433,14 @@ public class FlightOperationsController {
             flightService.updateExistingFlight(id, departure, destination, departureDate, time, durationNum, seatNum, twoWay);
         }
         catch (ValidationException e) {
-            showDataErrorMessage(e.getMessage());
+            utils.showDataValidationErrorMessage(e.getMessage());
             updateLabel.setText("Provide updated data (first, on the left, select which to update)");
             updateLabel.setTextFill(Color.BLACK);
             return;
         }
         catch (ServiceException e) {
-            showApplicationErrorMessage(e.getMessage());
-            clearForm(updatePane, "Provide updated data (first, on the left, select which to update)");
+            utils.showApplicationErrorMessage(e.getMessage());
+            utils.clearForm(updatePane, "Provide updated data (first, on the left, select which to update)");
             return;
         }
 
@@ -426,7 +449,8 @@ public class FlightOperationsController {
         alert.setHeaderText("Flight with id: " + id  + " has been updated successfully");
         alert.showAndWait();
 
-        clearForm(updatePane, "Provide updated data (first, on the left, select which to update)");
+        utils.clearForm(updatePane, "Provide updated data (first, on the left, select which to update)");
+        idToUpdateSelectorBox = utils.clearComboBox(updatePane, idToUpdateSelectorBox);
     }
 
     /**
@@ -437,10 +461,10 @@ public class FlightOperationsController {
     @FXML
     private void goBack(ActionEvent event) {
         try {
-            loadView("/lot/views/menu/MenuView.fxml", event);
+            utils.loadView("/lot/views/menu/MenuView.fxml", event, "flight");
         }
         catch (IOException e) {
-            showApplicationErrorMessage("Failed to load MenuView. " + e.getMessage());
+            utils.showApplicationErrorMessage("Failed to load MenuView. " + e.getMessage());
         }
     }
 
@@ -456,18 +480,6 @@ public class FlightOperationsController {
         choiceLabel.setTextFill(Color.BLACK);
     }
 
-    private void loadView(String viewPath, ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));
-        root = loader.load();
-        MenuController controller = loader.getController();
-        controller.setResourceType("flight");
-        stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/lot/css/Menu.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
-    }
-
     private void loadSelectedFlightDetails(ActionEvent event) {
         Integer id = idToUpdateSelectorBox.getValue();
         if (id == null) {
@@ -478,8 +490,8 @@ public class FlightOperationsController {
             flight = flightService.getFlightById(id);
         }
         catch (ServiceException e) {
-            showApplicationErrorMessage(e.getMessage());
-            clearForm(updatePane, "Provide updated data (first, on the left, select which to update)");
+            utils.showApplicationErrorMessage(e.getMessage());
+            utils.clearForm(updatePane, "Provide updated data (first, on the left, select which to update)");
             return;
         }
 
@@ -490,38 +502,5 @@ public class FlightOperationsController {
         updateDurationField.setText(Integer.toString(flight.getDuration()));
         updateSeatRowsAmountField.setText(Integer.toString(flight.getSeatRowsAmount()));
         updateTwoWayField.setSelected(flight.getTwoWay());
-    }
-
-    private void showApplicationErrorMessage(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Application exception");
-        alert.setHeaderText("Unexpected exception has occurred");
-        alert.setContentText("Details: " + message);
-        alert.showAndWait();
-    }
-
-    private void showDataErrorMessage(String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Data exception");
-        alert.setHeaderText("Exception related to provided data has occurred");
-        alert.setContentText("Details:\n" + message);
-        alert.showAndWait();
-    }
-
-    private void clearForm(AnchorPane anchorPane, String label) {
-        for (javafx.scene.Node node : anchorPane.getChildren()) {
-            if (node instanceof TextField) {
-                ((TextField) node).clear();
-            } else if (node instanceof DatePicker) {
-                ((DatePicker) node).setValue(null);
-            } else if (node instanceof CheckBox) {
-                ((CheckBox) node).setSelected(false);
-            } else if (node instanceof ComboBox) {
-                ((ComboBox<?>) node).setValue(null);
-            } else if (node instanceof Label) {
-                ((Label) node).setText(label);
-                ((Label) node).setTextFill(Color.BLACK);
-            }
-        }
     }
 }

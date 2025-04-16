@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ComboBox?>
-<AnchorPane fx:id="myPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lot.controllers.operations.PassengerOperationsController">
+<AnchorPane fx:id="searchPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lot.controllers.operations.PassengerOperationsController">
     <HBox alignment="CENTER" layoutX="91.0" layoutY="35.0" prefHeight="25.0" prefWidth="618.0" spacing="10.0" AnchorPane.leftAnchor="91.0" AnchorPane.rightAnchor="91.0" AnchorPane.topAnchor="35.0">
         <Button fx:id="buttonIdSearch" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" onAction="#changeVisibility" text="By ID" />
         <Button fx:id="buttonSurnameSearch" mnemonicParsing="false" prefHeight="25.0" prefWidth="150.0" onAction="#changeVisibility" text="By surname" />

@@ -149,7 +149,7 @@ public class ReservationDao implements GenericDao<Reservation> {
                 """;
         try (
                 Connection conn = DatabaseInitializer.getConnection();
-                PreparedStatement ps = conn.prepareStatement(query);
+                PreparedStatement ps = conn.prepareStatement(query)
         ) {
             ps.setString(1, surname);
             ResultSet rs = ps.executeQuery();
@@ -173,7 +173,7 @@ public class ReservationDao implements GenericDao<Reservation> {
     public int save(Reservation reservation) throws DatabaseActionException {
         String query =
                 """
-                INSERT INTO reservations (flightId, passengerId, seatNumber) VALUES 
+                INSERT INTO reservations (flightId, passengerId, seatNumber) VALUES
                 (?, ?, ?)
                 """;
         try (
@@ -251,32 +251,6 @@ public class ReservationDao implements GenericDao<Reservation> {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Boolean existsById(int id) throws DatabaseActionException {
-        String query =
-                """
-                SELECT 1
-                FROM reservations r
-                WHERE r.id = ?
-                """;
-        try (
-                Connection conn = DatabaseInitializer.getConnection();
-                PreparedStatement ps = conn.prepareStatement(query)
-        ) {
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            Boolean res = rs.next();
-            rs.close();
-            return res;
-        }
-        catch (SQLException e) {
-            throw new DatabaseActionException("Database error while checking if the reservation exists", e);
-        }
-    }
-
-    /**
      * Checks if a flight associated with a reservation has already taken place.
      *
      * @param flightId the ID of the flight to check
@@ -292,7 +266,7 @@ public class ReservationDao implements GenericDao<Reservation> {
                 """;
         try (
                 Connection conn = DatabaseInitializer.getConnection();
-                PreparedStatement ps = conn.prepareStatement(query);
+                PreparedStatement ps = conn.prepareStatement(query)
         ) {
             ps.setInt(1, flightId);
             ResultSet rs = ps.executeQuery();
@@ -306,11 +280,9 @@ public class ReservationDao implements GenericDao<Reservation> {
     }
 
     /**
-     * Retrieves all reservation IDs.
-     *
-     * @return a list of all reservation IDs
-     * @throws DatabaseActionException if a database error occurs
+     * {@inheritDoc}
      */
+    @Override
     public List<Integer> findAllId() throws DatabaseActionException {
         List<Integer> ids = new ArrayList<>();
 
