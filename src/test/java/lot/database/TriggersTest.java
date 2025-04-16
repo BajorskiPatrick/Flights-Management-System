@@ -1,6 +1,6 @@
 package lot.database;
 
-import lot.database.triggers.CheckForSeatAvailabilityTrigger;
+import lot.database.triggers.ManageSeatAvailabilityAfterUpdateTrigger;
 import lot.database.triggers.MakeSeatAvailableTrigger;
 import lot.database.triggers.MakeSeatUnavailableTrigger;
 
@@ -43,12 +43,7 @@ class TriggersTest {
             Trigger trigger = new MakeSeatUnavailableTrigger();
             trigger.init(conn, null, null, "reservations", false, Trigger.INSERT);
 
-            Object[] newRow = new Object[]{
-                    null,
-                    flightId,
-                    passengerId,
-                    "1A"
-            };
+            Object[] newRow = new Object[]{null, flightId, passengerId, "1A"};
 
             assert(isSeatAvailable(conn, flightId, "1A"));
 
@@ -68,17 +63,12 @@ class TriggersTest {
         try (Connection conn = DatabaseInitializer.getConnection()) {
             int flightId = insertTestFlight(conn);
             int passengerId = insertTestPassenger(conn);
-            insertTestSeat(conn, flightId, "2B", false); // Seat is occupied
+            insertTestSeat(conn, flightId, "2B", false);
 
             Trigger trigger = new MakeSeatAvailableTrigger();
             trigger.init(conn, null, null, "reservations", false, Trigger.DELETE);
 
-            Object[] oldRow = new Object[]{
-                    1,
-                    flightId,
-                    passengerId,
-                    "2B"
-            };
+            Object[] oldRow = new Object[]{1, flightId, passengerId, "2B"};
 
             assertFalse(isSeatAvailable(conn, flightId, "2B"));
 
@@ -98,33 +88,23 @@ class TriggersTest {
         try (Connection conn = DatabaseInitializer.getConnection()) {
             int flightId = insertTestFlight(conn);
             int passengerId = insertTestPassenger(conn);
-            insertTestSeat(conn, flightId, "3C", false); // Old seat - occupied
-            insertTestSeat(conn, flightId, "4D", true);  // New seat - available
+            insertTestSeat(conn, flightId, "3C", false);
+            insertTestSeat(conn, flightId, "4D", true);
 
-            Trigger trigger = new CheckForSeatAvailabilityTrigger();
+            Trigger trigger = new ManageSeatAvailabilityAfterUpdateTrigger();
             trigger.init(conn, null, null, "reservations", false, Trigger.UPDATE);
 
-            Object[] oldRow = new Object[]{
-                    1,
-                    flightId,
-                    passengerId,
-                    "3C"
-            };
+            Object[] oldRow = new Object[]{1, flightId, passengerId, "3C"};
 
-            Object[] newRow = new Object[]{
-                    1,
-                    flightId,
-                    passengerId,
-                    "4D"
-            };
+            Object[] newRow = new Object[]{1, flightId, passengerId, "4D"};
 
             assertFalse(isSeatAvailable(conn, flightId, "3C"));
             assertTrue(isSeatAvailable(conn, flightId, "4D"));
 
             trigger.fire(conn, oldRow, newRow);
 
-            assertTrue(isSeatAvailable(conn, flightId, "3C")); // Old seat should be available now
-            assertFalse(isSeatAvailable(conn, flightId, "4D")); // New seat should be occupied now
+            assertTrue(isSeatAvailable(conn, flightId, "3C"));
+            assertFalse(isSeatAvailable(conn, flightId, "4D"));
 
             conn.createStatement().execute("DELETE FROM seats WHERE flightId = " + flightId);
             conn.createStatement().execute("DELETE FROM passengers WHERE id = " + passengerId);
@@ -137,24 +117,14 @@ class TriggersTest {
         try (Connection conn = DatabaseInitializer.getConnection()) {
             int flightId = insertTestFlight(conn);
             int passengerId = insertTestPassenger(conn);
-            insertTestSeat(conn, flightId, "5E", false); // Occupied seat
+            insertTestSeat(conn, flightId, "5E", false);
 
-            Trigger trigger = new CheckForSeatAvailabilityTrigger();
+            Trigger trigger = new ManageSeatAvailabilityAfterUpdateTrigger();
             trigger.init(conn, null, null, "reservations", false, Trigger.UPDATE);
 
-            Object[] oldRow = new Object[]{
-                    1,
-                    flightId,
-                    passengerId,
-                    "5E"
-            };
+            Object[] oldRow = new Object[]{1, flightId, passengerId, "5E"};
 
-            Object[] newRow = new Object[]{
-                    1,
-                    flightId,
-                    passengerId + 1,
-                    "5E"
-            };
+            Object[] newRow = new Object[]{1, flightId, passengerId + 1, "5E"};
 
             assertFalse(isSeatAvailable(conn, flightId, "5E"));
 

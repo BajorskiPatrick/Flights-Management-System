@@ -226,6 +226,6 @@ class FlightDaoTest {
 
     @AfterAll
     static void reset() {
-        DatabaseInitializer.resetToDefault(); // wróć do plikowej wersji
+        DatabaseInitializer.resetToDefault();
     }
 }

@@ -10,12 +10,12 @@ import java.sql.SQLException;
  * Database trigger that manages seat availability when a reservation is updated.
  * Makes the old seat available and the new seat unavailable when a reservation's seat is changed.
  */
-public class CheckForSeatAvailabilityTrigger implements Trigger {
+public class ManageSeatAvailabilityAfterUpdateTrigger implements Trigger {
     /**
      * Constructs a new instance of the class with default values.
      * Initializes all fields to their default initial values.
      */
-    public CheckForSeatAvailabilityTrigger() {}
+    public ManageSeatAvailabilityAfterUpdateTrigger() {}
 
     /**
      * {@inheritDoc}

@@ -51,4 +51,4 @@ call "lot.database.triggers.MakeSeatUnavailableTrigger";
 create trigger if not exists reservation_updated
 after update on reservations
 for each row
-call "lot.database.triggers.CheckForSeatAvailabilityTrigger";
+call "lot.database.triggers.ManageSeatAvailabilityAfterUpdateTrigger";
