@@ -7,8 +7,8 @@
 
 <?import javafx.scene.control.ComboBox?>
 <AnchorPane fx:id="addPane" prefHeight="500" prefWidth="800" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="lot.controllers.operations.ReservationOperationsController">
-    <ComboBox fx:id="flightIdBox" layoutX="275.0" layoutY="140.0" prefWidth="250.0" promptText="Select flight id" />
-    <ComboBox fx:id="passengerIdBox" layoutX="275.0" layoutY="190.0" prefWidth="250.0" promptText="Select passenger id" />
+    <ComboBox fx:id="flightIdBox" layoutX="275.0" layoutY="140.0" prefWidth="250.0" promptText="Select flight number" />
+    <ComboBox fx:id="passengerIdBox" layoutX="275.0" layoutY="190.0" prefWidth="250.0" promptText="Select passenger number" />
     <ComboBox fx:id="seatNumberBox" layoutX="275.0" layoutY="240.0" prefWidth="250" promptText="Select seat number" />
 
     <Button fx:id="addButton" layoutX="350.0" layoutY="290.0" prefWidth="100" onAction="#addNewReservation" text="Add" />

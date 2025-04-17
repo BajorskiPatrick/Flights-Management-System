@@ -14,12 +14,12 @@
     </Label>
     <TableView fx:id="reservationTable" layoutX="55.0" layoutY="200.0" prefHeight="197.0" prefWidth="688.0">
         <columns>
-            <TableColumn fx:id="idColumn" prefWidth="50" text="ID" />
-            <TableColumn fx:id="flightIdColumn" prefWidth="100" text="Flight ID" />
-            <TableColumn fx:id="passengerIdColumn" prefWidth="100" text="Passenger ID" />
+            <TableColumn fx:id="idColumn" prefWidth="80" text="Number" />
+            <TableColumn fx:id="flightIdColumn" prefWidth="100" text="Flight number" />
+            <TableColumn fx:id="passengerIdColumn" prefWidth="120" text="Passenger number" />
             <TableColumn fx:id="passengerNameColumn" prefWidth="150" text="Passenger's name" />
             <TableColumn fx:id="passengerSurnameColumn" prefWidth="150" text="Passenger's surname" />
-            <TableColumn fx:id="seatNumberColumn" prefWidth="150" text="Seat number" />
+            <TableColumn fx:id="seatNumberColumn" prefWidth="100" text="Seat number" />
             <TableColumn fx:id="departureDateColumn" prefWidth="150" text="Departure date" />
             <TableColumn fx:id="tookPlaceColumn" prefWidth="100" text="Took place" />
         </columns>

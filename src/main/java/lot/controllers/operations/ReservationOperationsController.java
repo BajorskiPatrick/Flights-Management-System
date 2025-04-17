@@ -302,13 +302,13 @@ public class ReservationOperationsController {
     private void deleteSelectedId(ActionEvent event) {
         Integer choice = deleteId.getValue();
         if (choice == null) {
-            choiceLabel.setText("You choose no id!");
+            choiceLabel.setText("You chose no number!");
             return;
         }
 
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Deletion");
-        alert.setHeaderText("You are about to delete reservation with id: " + choice);
+        alert.setHeaderText("You are about to delete reservation with number: " + choice);
         alert.setContentText("Are you sure you want to continue?");
 
         if (alert.showAndWait().get() == ButtonType.OK) {
@@ -321,7 +321,7 @@ public class ReservationOperationsController {
             reservationIds.remove(choice);
             deleteId.setItems(reservationIds);
         }
-        utils.clearForm(deletionPane, "Select id for deletion");
+        utils.clearForm(deletionPane, "Select number for deletion");
         deleteId = utils.clearComboBox(deletionPane, deleteId);
     }
 
@@ -438,7 +438,7 @@ public class ReservationOperationsController {
     @FXML
     private void changeDeletionLabel(ActionEvent event) {
         Integer choice = deleteId.getValue();
-        choiceLabel.setText("You choose id: " + choice);
+        choiceLabel.setText("You chose number: " + choice);
     }
 
     /**

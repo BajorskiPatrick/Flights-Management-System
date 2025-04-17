@@ -20,5 +20,5 @@
         </font>
     </Label>
     <Button fx:id="backButton" layoutX="31.0" layoutY="445.0" mnemonicParsing="false" onAction="#goBack" text="Go back" />
-    <ComboBox fx:id="idToUpdateSelectorBox" layoutX="31.0" layoutY="140.0" prefHeight="25.0" prefWidth="200.0" promptText="Select passenger id" />
+    <ComboBox fx:id="idToUpdateSelectorBox" layoutX="31.0" layoutY="140.0" prefHeight="25.0" prefWidth="200.0" promptText="Select number" />
 </AnchorPane>

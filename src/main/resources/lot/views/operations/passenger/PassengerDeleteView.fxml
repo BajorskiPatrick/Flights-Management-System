@@ -8,7 +8,7 @@
 <?import javafx.scene.control.Button?>
 <AnchorPane fx:id="deletionPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lot.controllers.operations.PassengerOperationsController">
     <children>
-        <Label fx:id="choiceLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="120.0" prefHeight="35.0" prefWidth="800.0" text="Select id for deletion">
+        <Label fx:id="choiceLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="120.0" prefHeight="35.0" prefWidth="800.0" text="Select number for deletion">
             <font>
                 <Font size="24.0" />
             </font>

@@ -15,7 +15,7 @@
     </Label>
     <TableView fx:id="passengerTable" layoutX="55.0" layoutY="200.0" prefHeight="197.0" prefWidth="688.0">
         <columns>
-            <TableColumn fx:id="idColumn" prefWidth="50" text="ID" />
+            <TableColumn fx:id="idColumn" prefWidth="80" text="Number" />
             <TableColumn fx:id="nameColumn" prefWidth="100" text="Name" />
             <TableColumn fx:id="surnameColumn" prefWidth="100" text="Surname" />
             <TableColumn fx:id="emailColumn" prefWidth="200" text="Email" />

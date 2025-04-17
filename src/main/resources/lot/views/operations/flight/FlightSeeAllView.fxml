@@ -14,7 +14,7 @@
     </Label>
     <TableView fx:id="flightTable" layoutX="55.0" layoutY="200.0" prefHeight="197.0" prefWidth="688.0">
         <columns>
-            <TableColumn fx:id="idColumn" prefWidth="50" text="ID" />
+            <TableColumn fx:id="idColumn" prefWidth="80" text="Number" />
             <TableColumn fx:id="departureColumn" prefWidth="100" text="Departure" />
             <TableColumn fx:id="destinationColumn" prefWidth="100" text="Destination" />
             <TableColumn fx:id="departureDateColumn" prefWidth="150" text="Departure Date" />
