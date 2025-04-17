@@ -13,8 +13,7 @@ create table if not exists flights (
     destination varchar(50) not null,
     departureDate timestamp not null,
     duration int not null,
-    seatRowsAmount integer not null,
-    twoWay boolean not null
+    seatRowsAmount integer not null
 );
 
 
@@ -34,7 +33,8 @@ create table if not exists reservations (
     seatNumber varchar(4) not null,
     constraint reservations_flight_fk foreign key (flightId) references flights(id) on delete cascade,
     constraint reservations_passenger_fk foreign key (passengerId) references passengers(id) on delete cascade,
-    constraint reservations_seat_fk foreign key (flightId, seatNumber) references seats(flightId, seatNumber) on delete cascade
+    constraint reservations_seat_fk foreign key (flightId, seatNumber) references seats(flightId, seatNumber) on delete cascade,
+    constraint reservations_flight_seat_unique unique (flightId, seatNumber)
 );
 
 
