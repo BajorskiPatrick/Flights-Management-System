@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="addPane" prefHeight="500" prefWidth="800" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lot.controllers.operations.FlightOperationsController">
+    <TextField fx:id="departureField" layoutX="275.0" layoutY="90.0" prefWidth="250" promptText="Departure" />
+    <TextField fx:id="destinationField" layoutX="275.0" layoutY="140.0" prefWidth="250" promptText="Destination" />
+    <DatePicker fx:id="departureDateField" editable="false" layoutX="275.0" layoutY="190.0" prefWidth="250" promptText="Departure date" />
+    <TextField fx:id="timeField" layoutX="275.0" layoutY="240.0" prefWidth="250" promptText="Departure hour in HH:mm format" />
+    <TextField fx:id="durationField" layoutX="275.0" layoutY="290.0" prefWidth="250" promptText="Flight duration in minutes" />
+    <TextField fx:id="seatRowsAmountField" layoutX="275.0" layoutY="340.0" prefWidth="250" promptText="Seat rows amount" />
+    <Button fx:id="addButton" layoutX="350.0" layoutY="440.0" onAction="#addNewFlight" prefWidth="100" text="Add" />
+   <Label fx:id="addLabel" alignment="CENTER" layoutY="30.0" prefHeight="17.0" prefWidth="802.0" text="Type new flight data">
+      <font>
+         <Font size="24.0" />
+      </font>
+   </Label>
+    <Button fx:id="backButton" layoutX="31.0" layoutY="445.0" mnemonicParsing="false" onAction="#goBack" text="Go back" />
+
+</AnchorPane>
