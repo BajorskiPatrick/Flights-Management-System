@@ -82,6 +82,8 @@ target/site/jacoco/index.html
 
 ## ▶️ Run the Application
 
+**Remember!** Before running the application you need to configure Email Service (see **Email Configuration** section)
+
 ```bash
 mvn clean javafx:run
 ```
