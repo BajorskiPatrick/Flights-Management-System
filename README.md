@@ -27,6 +27,33 @@ It provides a user-friendly graphical interface to view, search, add, update, an
 
 ---
 
+## 🖼️ Application Views  
+
+Here are the key screens of the application:  
+
+### Home Page  
+![Home Page](/images/Main%20view.png)  
+
+### Flight Menu  
+![Flight Menu](/images/Flight%20main%20view.png)  
+
+### See All Reservations Panel  
+![See All Panel](/images/Reservation%20see%20all%20view.png)  
+
+### Search For Flight Panel
+![Search Panel](/images/Flight%20search%20view.png)  
+
+### Add New Flight Panel
+![Add Panel](/images/Add%20new%20flight%20view.png)
+
+### Update Passenger Panel
+![Update Panel](/images/Passenger%20update%20view.png)
+
+### Delete Panel 
+![Delete Panel](/images/Deletion%20view.png)  
+
+---
+
 ## ⚙️ Technologies Used
 
 - **Java 21**
